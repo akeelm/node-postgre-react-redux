@@ -6,10 +6,12 @@ const should = chai.should();
 
 describe('user model class', () => {
   let userModel = new user(1, 'akeel', 'mughal', 'password', 'test@email.com', true);
+  let invalidUserModel = new user(2, '23', '123', '123', '123', false);
 
   it('should have an id property', (done) => {
       should.exist(userModel.id);
       userModel.id.should.equal(1);
+      invalidUserModel.id.should.be.a('number');
       done();
   });
 
@@ -45,6 +47,11 @@ describe('user model class', () => {
 
   it('should have a emailverified property', (done) => {
       should.exist(userModel.emailverified);
+      done();
+  });
+
+  it('should be a valid model', (done) => {
+      should.equal(userModel.isValid(), undefined);
       done();
   });
 });

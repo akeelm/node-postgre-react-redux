@@ -1,7 +1,8 @@
 let pg = require('pg');
 let connectionString = process.env.DATABASE_URL || 'postgres://akeel:1234@localhost:5432/nodey';
 
-let tableExists = './utility/exists.js';
+//let tableExists = './utility/exists.js';
+import tableExists from './utility/exists.js';
 
 let client = new pg.Client(connectionString);
 client.connect();

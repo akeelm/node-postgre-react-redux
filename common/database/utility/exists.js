@@ -1,5 +1,4 @@
-/*
-export function tableExists(client, table) {
+export default function tableExists(client, table) {
   client.connect();
   let query = client.query(
     `SELECT to_regclass('public.${table}');`,
@@ -10,4 +9,3 @@ export function tableExists(client, table) {
       console.log(result.rows[0].regclass);
     }
 }
-*/
