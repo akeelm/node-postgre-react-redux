@@ -1,18 +1,23 @@
+import db from './../../../../common/database/db.js';
 import exists from './../../../../common/database/utility/exists.js';
 
 const assert = require('assert');
 const chai = require('chai');
 const should = chai.should();
 
-const pg = require('pg');
-const connectionString = process.env.DATABASE_URL || 'postgres://akeel:1234@localhost:5432/nodey';
-let client = new pg.Client(connectionString);
-client.connect();
-
 describe('tableExists', () => {
-  it('should be able to return true if table exists', (done) => {
-      const _exists = new exists(client, 'user');
-      console.log(_exists.tableExists(client, 'user') + ' line 15');
-      should.exist(baseClass.id);
+  it('should not return null if table exists', (done) => {
+    db.db_utility.does_table_exist(['users'], function(err, res){
+      should.not.equal(res[0].to_regclass, null);
+      done();
+    });
+    console.log(exists('users'));
+  });
+
+  it('should return null if table exists', (done) => {
+    db.db_utility.does_table_exist(['random'], function(err, res){
+      should.equal(res[0].to_regclass, null);
+      done();
+    });
   });
 });

@@ -4,8 +4,8 @@ class exists {
 
       this.tableExists = function (table) {
         const pg = require('pg');
-        const connectionString = process.env.DATABASE_URL || 'postgres://akeel:1234@localhost:5432/nodey';
-        
+        const connectionString = process.env.DATABASE_URL 
+
         pg.connect(connectionString, (err, client, done) => {
           if (err) {
             done();

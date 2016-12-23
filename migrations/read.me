@@ -1,0 +1,8 @@
+These are the db migrations using pg-migrate, install globally using npm and use the commands below.
+Decided to use raw SQL for migration scripts to make it easier to change migration strategy if needed 
+
+pg-migrate create {migration-name} - creates a new migration file with the name you give it. Spaces and underscores will be replaced by dashes and a timestamp is prepended to your file name.
+pg-migrate up - runs all up migrations from the current state.
+pg-migrate up {N} - runs N up migrations from the current state.
+pg-migrate down - runs a single down migration.
+pg-migrate down {N} - runs N down migrations from the current state.
