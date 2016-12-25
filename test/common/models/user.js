@@ -54,4 +54,18 @@ describe('user model class', () => {
       should.equal(userModel.isValid(), undefined);
       done();
   });
+
+  it('should have a method for encrypting passwords', (done) => {
+      let oldPassword = userModel.password;
+      userModel.generateHash(userModel.password);
+      should.not.equal(userModel.password, oldPassword);
+      done();
+  });
+
+  it('should be able to validate password', (done) => {
+      let password = 'password';
+      should.equal(userModel.validatePassword(password), true);
+      done();
+  });
+
 });

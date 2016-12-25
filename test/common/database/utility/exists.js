@@ -11,7 +11,6 @@ describe('tableExists', () => {
       should.not.equal(res[0].to_regclass, null);
       done();
     });
-    console.log(exists('users'));
   });
 
   it('should return null if table exists', (done) => {

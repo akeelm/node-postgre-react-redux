@@ -1,4 +1,5 @@
 import base from './base.js';
+const bcrypt = require('bcrypt');
 
 class user extends base {
   constructor(id, firstname, surname, password, email, emailverified = false, createddate, updateddate) {
@@ -9,7 +10,7 @@ class user extends base {
     this.email = email;
     this.emailverified = emailverified
 
-    //For validate.js append to constraints in the base model
+    //For validate.js we are appending to constraints in the base model
     Object.assign(this.constraints,
       {
         firstname: {
@@ -28,6 +29,14 @@ class user extends base {
       }
     );
   }
+
+  generateHash(password) {
+    this.password = bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+  };
+
+  validatePassword(password) {
+    return bcrypt.compareSync(password, this.password);
+  };
 }
 
 export default user;
