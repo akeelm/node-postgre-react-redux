@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 import user from './../../common/models/user.js';
 import security from './../../common/security.js';
 
-module.exports = function(app) {
+module.exports = function(app, passport) {
 
   //USER REGISTER
   app.post('/api/user/register', function(req, res) {
@@ -41,7 +41,7 @@ module.exports = function(app) {
     });
 
     //USER DELETE BY EMAIL
-    app.post('/api/user/delete', function(req, res) {
+    app.post('/api/user/delete', security.isAuthenticated, function(req, res) {
       if (req.body.email === undefined){
         res.status(401).send('No data sent');
         return;
@@ -59,35 +59,28 @@ module.exports = function(app) {
       });
     });
 
-    //USER LOGIN
-    app.post('/api/user/login', function(req, res) {
-      if (req.body.email === undefined ||
-      req.body.password === undefined){
-        res.status(401).send('No data sent');
-        return;
-      }
 
-      db.users.findOne({email: [req.body.email]}, function(err,user){
-        if (user !== undefined) {
-          //check password
-          //TODO: actually login
-          (bcrypt.compareSync(req.body.password, user.password)) ?
-          res.send('Logged in') :
-          res.status(401).send('Invalid login');
-        } else {
-          res.status(401).send('Invalid login');
-        }
-      });
+    //USER LOGIN
+    app.post('/api/user/login', passport.authenticate('local-login', {
+        successRedirect : '/api/user/loggedin', // redirect to the secure profile section
+        failureRedirect : '/api/user/unauthorized', // redirect back to the signup page if there is an error
+        failureFlash : false // allow flash messages
+    }));
+
+    //USER LOGIN SUCCESSS
+    app.get('/api/user/loggedin', function(req, res){
+      res.send('Logged in');
+    });
+
+    //USER UNAUTHORIZED
+    app.get('/api/user/unauthorized', function(req, res){
+      res.status(401).send('Unauthorized');
     });
 
     //USER ROLES
-    app.post('/api/user/roles', function(req, res, next) {
-      if (req.body.userid === undefined) {
-        res.status(401).send('No data sent');
-        return;
-      }
+    app.post('/api/user/roles', security.isAuthenticated, function(req, res, next) {
+      if (req.body.userid === undefined) return res.status(401).send('No data sent');
 
-      debugger;
       var onlyAdmins = security.onlyAdminsPromise(req, res);
 
       var p3 = new Promise((resolve, reject) => {

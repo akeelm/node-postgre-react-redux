@@ -5,6 +5,7 @@ const server = require(process.cwd() + '/server/server');
 const should = chai.should();
 require('dotenv').config()
 chai.use(chaiHttp);
+var agent = chai.request.agent(server);
 
 describe('user api', () => {
   it('should have a register post method', (done) => {
@@ -64,7 +65,8 @@ describe('user delete method', () => {
 
 describe('user login method', () => {
   it('should allow user login', (done) => {
-    chai.request(server)
+    //chai.request(server)
+    agent
     .post('/api/user/login')
     .send({ email: 'akeelm_uk@hotmail.com', password: 'password' })
     .end((err, res) => {
@@ -76,7 +78,8 @@ describe('user login method', () => {
 
 describe('user get roles method', () => {
   it('should get user roles for userid', (done) => {
-    chai.request(server)
+    //chai.request(server)
+    agent
     .post('/api/user/roles')
     .send({ userid: 1 })
     .end((err, res) => {

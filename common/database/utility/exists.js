@@ -15,7 +15,6 @@ class exists {
 
         client.query(`SELECT to_regclass('public.${table}');`);
 
-        debugger;
         query.on('row', (row) =>{
           results.push(row);
         });

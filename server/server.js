@@ -6,18 +6,19 @@ app.use(bodyParser.json()); // Body parser use JSON data
 
 let passport = require("passport");
 let LocalStrategy = require('passport-local').Strategy;
+require('./../common/passport.js')(passport);
 
 let cookieParser = require('cookie-parser');
 let session = require('express-session');
-
-recursiveRoutes('./server/', app);
-
-app.use(cookieParser());
 
 //passport.js stuff
 app.use(session({ secret: 'SECRET' }));
 app.use(passport.initialize());
 app.use(passport.session());
+
+recursiveRoutes('./server/', app, passport);
+
+app.use(cookieParser());
 
 import recursiveRoutes from './../recursive-routes.js';
 
