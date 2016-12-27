@@ -29,15 +29,22 @@ app.use(session({ secret: 'SECRET' }));
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.get('/:page', function(req, res) {
+  res.sendFile(path.join(__dirname, './client/index.html'));
+});
+app.get('/', function(req, res) {
+  res.sendFile(path.join(__dirname, './client/index.html'));
+});
+
+app.use('/static', express.static( __dirname + '/client/styles/bootstrap/js'));
+app.use('/static', express.static( __dirname + '/client/assets'));
+
+import recursiveRoutes from './recursive-routes.js';
 recursiveRoutes('./server/', app, passport);
 
 app.use(cookieParser());
 
-import recursiveRoutes from './recursive-routes.js';
 
-app.get('/', function(req, res) {
-    res.sendFile(path.join(__dirname, './client/index.html'));
-});
 
 let server = app.listen(3000, function(err) {
     if (err) console.log(err);

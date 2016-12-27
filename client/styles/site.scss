@@ -1,7 +1,40 @@
 @import '~bootstrap/dist/css/bootstrap.css';
-@import '~bootstrap-material-design/dist/css/bootstrap-material-design.css';
+//@import '~bootstrap-material-design/dist/css/bootstrap-material-design.css';
+@import './bootstrap/material-kit.css';
 @import '~bootstrap-material-design/dist/css/ripples.css';
 //@import "./sass/bootstrap-material-design.scss";
+@import url(https://fonts.googleapis.com/css?family=Roboto:100,300);
+
 
 body {
+}
+
+.title {
+  font-size: 4em;
+}
+
+h1 {
+  line-height: 1.15em;
+  font-size: 4.8em;
+  font-weight: 600;
+  display: inline-block;
+  position: relative;
+}
+
+.container {
+  max-width: 1170px;
+}
+
+.page-header .container {
+  a {
+    color: #fff;
+  }
+}
+
+.brand {
+  text-align: center;
+}
+
+.section-tabs {
+  background-color: #EEEEEE;
 }
