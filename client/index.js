@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 require('./styles/site.scss');
+import styles from './styles/site.scss';
 
 //Import react router deps
 import { Router, Route, IndexRoute, browserHistory }
