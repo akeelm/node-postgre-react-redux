@@ -12,6 +12,9 @@ const Home = React.createClass({
               app using PostgreSQL for the back end and React with Redux
               on the front end.
             </p>
+            <p>
+              
+            </p>
           </h4>
         </div>
       </div>
