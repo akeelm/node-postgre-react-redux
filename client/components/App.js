@@ -5,8 +5,6 @@ import Main from './Main.js';
 
 function mapStateToProps(state) {
   return {
-    posts: state.posts,
-    comments: state.comments,
     user: state.user
   }
 }

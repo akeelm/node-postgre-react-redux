@@ -21,7 +21,6 @@ export function checkHttpStatus(response) {
 }
 //login
 export function loginUser(email, password) {
-  console.log('login action creator username ' + email + ' ' + password);
   return function(dispatch) {
     //dispatch(loginUserRequest());
     return fetch('http://localhost:3000/api/user/login/', {

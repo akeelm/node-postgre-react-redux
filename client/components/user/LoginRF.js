@@ -1,39 +1,31 @@
 import React from 'react';
 import FormStatus from './../forms/FormStatus.js';
 import InputText from './../forms/InputText.js';
+import { Field, reduxForm } from 'redux-form';
 
 class Login extends React.Component{
-  constructor(props) {
-    super(props);
-  }
-  handleSubmit(e) {
-    e.preventDefault();
-    console.log(this.props.children);
-    const email = this.refs.email.value;
-    const password = this.refs.password.value;
-    this.props.loginUser(email, password);
-  }
   render() {
+    const { handleSubmit } = this.props;
     return (
-      <div className="section">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-11">
-              <div className="bs-component">
-                <legend>Login</legend>
-                <form ref="loginForm" className="form-horizontal"
-                  onSubmit={this.handleSubmit.bind(this)}>
+      <form ref="loginForm" className="form-horizontal"
+        onSubmit={handleSubmit}>
+        <div className="section">
+          <div className="container">
+            <div className="row">
+              <div className="col-md-11">
+                <div className="bs-component">
+                  <legend>Login</legend>
                   <fieldset>
 
                     <div className="form-group is-empty">
                       <label for="inputEmail" className="col-md-2 control-label">E-mail</label>
                       <div className="col-md-10">
-                        <input type="text" id="inputEmail" className="form-control" ref="email" placeholder="E-mail"/>
+                        <Field type="text" className="form-control" name="email" component="input" placeholder="E-mail"/>
                       </div>
                     </div>
 
                     <div className="form-group is-empty">
-                      <label for="inputPassword" className="col-md-2 control-label">Password</label>
+                      <label for="inputPassword" className="col-md-2, control-label">Password</label>
                       <div className="col-md-10">
                         <input type="password" id="inputPassword" className="form-control" ref="password" placeholder="Password"/>
                       </div>
@@ -48,14 +40,19 @@ class Login extends React.Component{
                     <FormStatus {...this.props.user} />
 
                   </fieldset>
-                </form>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </form>
     )
   }
 };
+
+Login = reduxForm({
+  form: 'contact' // a unique name for this form
+})(Login);
+
 
 export default Login;

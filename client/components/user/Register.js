@@ -6,19 +6,16 @@ class Register extends React.Component{
     this.state = {"showHideLogin":"hidden", "blockScreen":"hidden"};
   }
   toggleLoginBox() {
-    console.log('toggling visibility');
     let css = (this.state.showHideLogin === "hidden") ? "login-box show" : "hidden";
     this.setState({"showHideLogin":css})
     this.toggleBlockScreen();
   }
   toggleBlockScreen(){
-    console.log('block ' + this.state.blockScreen);
     let css = (this.state.blockScreen === "hidden") ? "block-screen" : "hidden";
     this.setState({"blockScreen":css});
   }
   handleSubmit(e) {
     e.preventDefault();
-    console.log(this.refs);
     const firstname = this.refs.firstname.value;
     const surname = this.refs.surname.value;
     const email = this.refs.email.value;

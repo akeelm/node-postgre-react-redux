@@ -1,13 +1,8 @@
 import { applyMiddleware, createStore, compose } from 'redux';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { browserHistory } from 'react-router';
-
-//import the root reducer
 import rootReducer from "./reducers/index";
 import thunk from 'redux-thunk';
-
-//import comments from "./data/comments";
-//import posts from "./data/posts";
 
 //create an object for the default data
 const defaultState = {
@@ -16,11 +11,9 @@ const defaultState = {
   //currentUser: undefined
 };
 
-let createStoreWithMiddleware;
-
 const middleware = applyMiddleware(thunk);
 
-createStoreWithMiddleware = compose(
+let createStoreWithMiddleware = compose(
   middleware
 )
 

@@ -9,7 +9,6 @@ class exists {
       pg.connect(connectionString, (err, client, done) => {
         if (err) {
           done();
-          console.log(err);
           return err;
         }
 
