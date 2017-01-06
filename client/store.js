@@ -1,7 +1,7 @@
 import { applyMiddleware, createStore, compose } from 'redux';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { browserHistory } from 'react-router';
-import rootReducer from "./reducers/index";
+import rootReducer from "./reducers/baseReducer";
 import thunk from 'redux-thunk';
 
 //create an object for the default data
@@ -27,8 +27,8 @@ export const history =
   syncHistoryWithStore(browserHistory, store);
 
 if (module.hot) {
-  module.hot.accept('./reducers/', () => {
-    const nextRootReducer = require('./reducers/index.js').default;
+  module.hot.accept('./reducers/baseReducer.js', () => {
+    const nextRootReducer = require('./reducers/baseReducer.js').default;
     store.replaceReducer(nextRootReducer);
   });
 }

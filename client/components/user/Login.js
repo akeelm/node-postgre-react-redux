@@ -6,7 +6,7 @@ import * as validate from './../../constants/validate.js';
 
 class Login extends React.Component{
   handleSubmit(values) {
-    this.props.loginUser(values.email, values.password);
+    this.props.actions.userActions.loginUser(values.email, values.password);
   }
   render() {
     const { handleSubmit, submitting } = this.props;
