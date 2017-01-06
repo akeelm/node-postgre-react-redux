@@ -1,88 +1,60 @@
 import React from 'react';
+import FormStatus from './../forms/FormStatus.js';
+import InputText from './../forms/InputText.js';
+import { Field, reduxForm } from 'redux-form';
+import * as validate from './../../constants/validate.js';
 
 class Register extends React.Component{
-  constructor(props) {
-    super(props);
-    this.state = {"showHideLogin":"hidden", "blockScreen":"hidden"};
-  }
-  toggleLoginBox() {
-    let css = (this.state.showHideLogin === "hidden") ? "login-box show" : "hidden";
-    this.setState({"showHideLogin":css})
-    this.toggleBlockScreen();
-  }
-  toggleBlockScreen(){
-    let css = (this.state.blockScreen === "hidden") ? "block-screen" : "hidden";
-    this.setState({"blockScreen":css});
-  }
-  handleSubmit(e) {
-    e.preventDefault();
-    const firstname = this.refs.firstname.value;
-    const surname = this.refs.surname.value;
-    const email = this.refs.email.value;
-    const password = this.refs.password.value;
-    this.props.register(firstname, surname, email, password);
+  handleSubmit(values) {
+    this.props.loginUser(values.email, values.password);
   }
   render() {
+    const { handleSubmit, submitting } = this.props;
     return (
-      <div className="section">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-11">
-              <div className="bs-component">
-                <legend>Register</legend>
-                <form ref="loginForm" className="form-horizontal"
-                  onSubmit={this.handleSubmit.bind(this)}>
+      <form ref="loginForm" className="form-horizontal"
+        onSubmit={this.props.handleSubmit(this.handleSubmit.bind(this))}>
+        <div className="section">
+          <div className="container">
+            <div className="row">
+              <div className="col-md-11">
+                <div className="bs-component">
+                  <legend>Register</legend>
                   <fieldset>
 
-                    <div className="form-group is-empty">
-                      <label for="inputFirstname" className="col-md-2 control-label">First name</label>
-                      <div className="col-md-10">
-                        <input type="text" id="inputFirstname" className="form-control" ref="firstname" placeholder="First name"/>
-                      </div>
-                    </div>
+                    <InputText placeholder="First name" name="firstname" validate={validate.required}/>
 
-                    <div className="form-group is-empty">
-                      <label for="inputSurname" className="col-md-2 control-label">Surname</label>
-                      <div className="col-md-10">
-                        <input type="text" id="inputSurname" className="form-control" ref="surname" placeholder="Surname"/>
-                      </div>
-                    </div>
+                    <InputText placeholder="Surname" name="surname" validate={validate.required}/>
 
-                    <div className="form-group is-empty">
-                      <label for="inputEmail" className="col-md-2 control-label">E-mail</label>
-                      <div className="col-md-10">
-                        <input type="text" id="inputEmail" className="form-control" ref="email" placeholder="E-mail"/>
-                      </div>
-                    </div>
+                    <InputText placeholder="E-mail" name="email" validate={[validate.email, validate.required]}/>
 
-                    <div className="form-group is-empty">
-                      <label for="inputPassword" className="col-md-2 control-label">Password</label>
-                      <div className="col-md-10">
-                        <input type="password" id="inputPassword" className="form-control" ref="password" placeholder="Password"/>
-                      </div>
-                    </div>
+                    <InputText placeholder="Password" name="password" validate={validate.required} type="password"/>
 
-                    <div className="form-group is-empty">
-                      <label for="inputConfirmPassword" className="col-md-2 control-label">Confirm Password</label>
-                      <div className="col-md-10">
-                        <input type="password" id="inputConfirmPassword" className="form-control" ref="confirmpassword" placeholder="Confirm Password"/>
-                      </div>
-                    </div>
+                    <InputText placeholder="Confirm password" name="password" validate={validate.required} type="password"/>
 
                     <div className="form-group">
                       <div className="col-md-10 col-md-offset-2">
-                        <input className="btn btn-primary" type="submit" />
+                        <button className="btn btn-primary" type="submit" disabled={submitting}>Submit</button>
                       </div>
                     </div>
+
+                    <FormStatus {...this.props.user} />
+
                   </fieldset>
-                </form>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </form>
     )
   }
 };
+
+Register = reduxForm({
+  form: 'registerForm', // a unique name for this form
+  touchOnBlue: false,
+  touchOnChange: false
+})(Register);
+
 
 export default Register;

@@ -12,7 +12,7 @@ import store, { history } from './store';
 import App from './components/App';
 import Home from './components/Home';
 import Register from './components/user/Register';
-import Login from './components/user/LoginRF';
+import Login from './components/user/Login';
 
 const router = (
   <Provider store={store}>
