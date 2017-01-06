@@ -15,8 +15,6 @@ const reducers = {
   form: formReducer
 }
 
-console.log(reducers);
-
 const rootReducer = combineReducers(reducers);
 
 export default rootReducer;

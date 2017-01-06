@@ -1,19 +1,18 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
+import { Field, reduxForm } from 'redux-form';
+import RenderField from './RenderField.js';
 
-class InputText extends React.Component{
-  constructor(props) {
-    super(props);
-  }
-  render() {
-    return (
-      <div className="form-group is-empty">
-        <label for="inputEmail" className="col-md-2 control-label">E-mail</label>
-        <div className="col-md-10">
-          <input type="text" id="inputEmail" className="form-control" ref="email" placeholder="E-mail"/>
-        </div>
-      </div>
-    )
-  }
-};
+const InputText = (props) => (
+  <div className="form-group is-empty">
+    <label className="col-md-2 control-label">
+      {props.placeholder}
+    </label>
+    <div className="col-md-10">
+      <Field type={ (props.type) ? props.type : 'text' } className="form-control" name={props.name}
+        component={RenderField} placeholder={props.placeholder}
+        validate={props.validate} />
+    </div>
+  </div>
+);
 
 export default InputText;
