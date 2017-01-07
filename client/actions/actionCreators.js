@@ -5,8 +5,6 @@ const actionCreators = {
   userActions: UserActions,
 };
 
-// export default actionCreators;
-
 export default dispatch => {
   let bound = {};
 

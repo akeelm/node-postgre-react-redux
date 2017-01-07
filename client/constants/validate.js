@@ -5,7 +5,7 @@ export const number = value => value && isNaN(Number(value)) ? 'Must be a number
 export const email = value => value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value) ? 'Invalid email address' : undefined;
 
 export const validateConfirm = values => {
-  const errors = {}
+  const errors = {};
 
   if (values === undefined)
     return;
@@ -14,5 +14,5 @@ export const validateConfirm = values => {
     errors.password = 'Passwords do not match.'
   }
 
-  return errors
+  return (errors.password !== undefined) ? errors : undefined;
 }

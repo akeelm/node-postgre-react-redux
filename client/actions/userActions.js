@@ -21,11 +21,11 @@ export function loginUser(email, password) {
       try {
         dispatch(loginUserSuccess(email));
         //dispatch(pushState(null, redirect));
-      } catch (e) {
+      } catch (error) {
         dispatch(loginUserFailure({
           response: {
             status: 403,
-            statusText: 'Invalid token'
+            statusText: error
           }
         }));
       }
@@ -60,12 +60,58 @@ export function loginUserFailure(error) {
 
 //register
 export function registerUser(firstname, surname, email, password) {
+  return function(dispatch) {
+    //dispatch(loginUserRequest());
+    return fetch('http://localhost:3000/api/user/register/', {
+      method: 'post',
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({firstname: firstname, surname: surname, email: email, password: password})
+    })
+    .then(apiUtils.checkHttpStatus)
+    //.then(parseJSON)
+    .then(response => {
+      try {
+        dispatch(registerUserSuccess(email));
+        //dispatch(pushState(null, redirect));
+      } catch (error) {
+        dispatch(registerUserFailure({
+          response: {
+            status: 403,
+            statusText: error
+          }
+        }));
+      }
+    })
+    .catch(error => {
+      dispatch(registerUserFailure(error));
+    })
+  }
+}
+
+export function registerUserSuccess(user) {
+  localStorage.setItem('currentUser', user);
   return {
-    type: authConstants.REGISTER_USER,
-    firstname,
-    surname,
-    email,
-    password
+    type: authConstants.REGISTER_USER_SUCCESS,
+    payload: {
+      status: 200,
+      statusText: "You have successfully registered your account",
+      user: user
+    }
+  }
+}
+
+export function registerUserFailure(error) {
+  localStorage.removeItem('currentUser');
+  return {
+    type: authConstants.REGISTER_USER_FAILURE,
+    payload: {
+      status: error.response.status,
+      statusText: error.response.statusText
+    }
   }
 }
 

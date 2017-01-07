@@ -32,7 +32,7 @@ module.exports = function(app, passport) {
         },
         function(err,inserted){
           if (err)
-          res.status(401).send(err);
+            res.status(401).send('xxx ' +err);
           else {
             res.send('Successfully registered');
           }
