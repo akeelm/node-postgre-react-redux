@@ -9,7 +9,7 @@ class Login extends React.Component{
     this.props.actions.userActions.loginUser(values.email, values.password);
   }
   render() {
-    const { handleSubmit, submitting } = this.props;
+    const { handleSubmit, submitting, valid, pristine } = this.props;
     return (
       <form ref="loginForm" className="form-horizontal"
         onSubmit={this.props.handleSubmit(this.handleSubmit.bind(this))}>
@@ -27,7 +27,7 @@ class Login extends React.Component{
 
                     <div className="form-group">
                       <div className="col-md-10 col-md-offset-2">
-                        <button className="btn btn-primary" type="submit" disabled={submitting}>Submit</button>
+                        <button className="btn btn-primary" type="submit" disabled={submitting || !valid || pristine}>Submit</button>
                       </div>
                     </div>
 

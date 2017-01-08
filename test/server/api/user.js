@@ -1,7 +1,7 @@
 const assert = require('assert');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const server = require(process.cwd() + '/server/server');
+const server = require(process.cwd() + '/server');
 const should = chai.should();
 require('dotenv').config()
 chai.use(chaiHttp);

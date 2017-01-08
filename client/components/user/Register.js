@@ -7,13 +7,12 @@ import * as validate from './../../constants/validate.js';
 
 class Register extends React.Component{
   handleSubmit(values) {
-    console.log(values);
     this.props.actions.userActions.registerUser(values.firstname, values.surname, values.email, values.password);
   }
   render() {
     const {
       fields: { password, confirmPassword },
-      handleSubmit, submitting } = this.props;
+      handleSubmit, submitting, valid, pristine } = this.props;
     return (
       <form ref="registerForm" className="form-horizontal"
         onSubmit={this.props.handleSubmit(this.handleSubmit.bind(this))}>
@@ -37,7 +36,7 @@ class Register extends React.Component{
 
                     <div className="form-group">
                       <div className="col-md-10 col-md-offset-2">
-                        <button className="btn btn-primary" type="submit" disabled={submitting}>Submit</button>
+                        <button className="btn btn-primary" type="submit" disabled={pristine || submitting || !valid}>Submit</button>
                       </div>
                     </div>
 

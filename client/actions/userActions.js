@@ -59,12 +59,47 @@ export function loginUserFailure(error) {
 }
 
 //register
+// export function registerUser(firstname, surname, email, password) {
+//   console.log('test');
+//   return function(dispatch) {
+//     return fetch('http://localhost:3000/api/user/register/', {
+//       method: 'post',
+//       headers: {
+//         'Accept': 'application/json',
+//         'Content-Type': 'application/json'
+//       },
+//       body: JSON.stringify({firstname: firstname, surname: surname, email: email, password: password})
+//     })
+//     // .then(apiUtils.checkHttpStatus)
+//     //.then(parseJSON)
+//     .then((response) => {
+//       try {
+//         dispatch(registerUserSuccess(email));
+//         //dispatch(pushState(null, redirect));
+//       }
+//       catch (error) {
+//         console.log('111');
+//         dispatch(
+//           registerUserFailure({
+//             response: {
+//               status: 403,
+//               statusText: error
+//             }
+//           })
+//         );
+//       }
+//     })
+//     .catch(error => {
+//         console.log('222');
+//       dispatch(registerUserFailure(error));
+//     })
+//   }
+// }
+
 export function registerUser(firstname, surname, email, password) {
-  return function(dispatch) {
-    //dispatch(loginUserRequest());
+  return (dispatch) => {
     return fetch('http://localhost:3000/api/user/register/', {
       method: 'post',
-      credentials: 'include',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
@@ -73,27 +108,34 @@ export function registerUser(firstname, surname, email, password) {
     })
     .then(apiUtils.checkHttpStatus)
     //.then(parseJSON)
-    .then(response => {
+    .then((response) => {
       try {
-        dispatch(registerUserSuccess(email));
+        console.log(response);
+        dispatch(registerUserSuccess(response));
         //dispatch(pushState(null, redirect));
-      } catch (error) {
-        dispatch(registerUserFailure({
-          response: {
-            status: 403,
-            statusText: error
-          }
-        }));
+      }
+      catch (error) {
+        console.log('111');
+        dispatch(
+          registerUserFailure({
+            response: {
+              status: 403,
+              statusText: error
+            }
+          })
+        );
       }
     })
     .catch(error => {
+      console.log('222');
       dispatch(registerUserFailure(error));
     })
   }
 }
 
 export function registerUserSuccess(user) {
-  localStorage.setItem('currentUser', user);
+  console.log('registerUserSuccess fired' + user);
+  // localStorage.setItem('currentUser', user);
   return {
     type: authConstants.REGISTER_USER_SUCCESS,
     payload: {
@@ -105,6 +147,7 @@ export function registerUserSuccess(user) {
 }
 
 export function registerUserFailure(error) {
+  console.log('registerUserFailure fired');
   localStorage.removeItem('currentUser');
   return {
     type: authConstants.REGISTER_USER_FAILURE,

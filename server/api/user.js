@@ -5,45 +5,45 @@ import security from './../../common/security.js';
 
 module.exports = function(app, passport) {
 
-  //USER REGISTER
-  app.post('/api/user/register', function(req, res) {
-    if (req.body.email === undefined){
-      res.status(401).send('No data sent');
-      return;
-    }
-
-    //check if email has already been registered
-    db.users.where("email=$1", [req.body.email], function(err,users){
-      if (users.length > 0) {
-        res.status(401).send('A user with this e-mail already exists');
+    //USER REGISTER
+    app.post('/api/user/register', function(req, res) {
+      if (req.body.email === undefined){
+        res.statusMessage = 'No data sent';
+        res.status(401);
         return;
       }
 
-      //encrypt the password
-      let password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(8), null);
+      //check if email has already been registered
+      db.users.where("email=$1", [req.body.email], function(err,users){
+        if (users.length > 0) {
+          res.statusMessage = 'A user with this e-mail already exists';
+          res.status(401);
+          return;
+        }
 
-      //save to the database
-      db.users.save(
-        {
+        //encrypt the password
+        let password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(8), null);
+
+        //save to the database
+        db.users.save({
           firstname: req.body.firstname,
           surname: req.body.surname,
           email: req.body.email,
           password: password
         },
-        function(err,inserted){
-          if (err)
-            res.status(401).send('xxx ' +err);
-          else {
-            res.send('Successfully registered');
-          }
+        function(err,inserted) {
+          (err) ?
+          res.status(401).send(err) :
+          res.send('Successfully registered');
         });
-      });
+      })
     });
 
     //USER DELETE BY EMAIL
     app.post('/api/user/delete', security.isAuthenticated, function(req, res) {
       if (req.body.email === undefined){
-        res.status(401).send('No data sent');
+        res.statusMessage = 'No data sent';
+        res.status(401);
         return;
       }
 
@@ -54,7 +54,8 @@ module.exports = function(app, passport) {
             res.send('User deleted');
           });
         } else {
-          res.status(401).send('User does not exist');
+          res.statusMessage = 'User does not exist';
+          res.status(401);
         }
       });
     });

@@ -57,20 +57,17 @@ export default createReducer(initialState, {
       'email': null,
       'statusText': 'You have been successfully logged out.'
     });
-  }
+  },
+  [authConstants.REGISTER_USER_SUCCESS]: (state, payload) => {
+    return Object.assign({}, state, {
+      'status': payload.status,
+      'statusText': `${payload.statusText}`
+    });
+  },
+  [authConstants.REGISTER_USER_FAILURE]: (state, payload) => {
+    return Object.assign({}, state, {
+      'status': payload.status,
+      'statusText': `Registration failure: ${payload.statusText}`
+    });
+  },
 });
-
-// function posts(state = [], action) {
-//   switch (action.type) {
-//     case 'INCREMENT_LIKES':
-//       const i = action.index;
-//       console.log('Incrementing Likes!! ' + i);
-//       return [
-//         ...state.slice(0,i), //before the one we are updating
-//         {...state[i], likes: state[i].likes + 1},
-//         ...state.slice(i + 1), //after the one we are updating
-//       ]
-//     default:
-//       return state;
-//   }
-// }
