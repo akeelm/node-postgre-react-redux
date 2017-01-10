@@ -7,7 +7,7 @@ require('dotenv').config()
 chai.use(chaiHttp);
 var agent = chai.request.agent(server);
 
-describe('user api', () => {
+describe('user register method', () => {
   it('should have a register post method', (done) => {
     chai.request(server)
     .post('/api/user/register')
@@ -16,9 +16,6 @@ describe('user api', () => {
       done();
     });
   });
-});
-
-describe('user register method', () => {
   it('should not allow duplicate emails', (done) => {
     chai.request(server)
     .post('/api/user/register')
@@ -65,10 +62,17 @@ describe('user delete method', () => {
 
 describe('user login method', () => {
   it('should allow user login', (done) => {
-    //chai.request(server)
     agent
     .post('/api/user/login')
     .send({ email: 'akeelm_uk@hotmail.com', password: 'password' })
+    .end((err, res) => {
+      res.should.have.status(200);
+      done();
+    });
+  });
+  it('should have a success route end point', (done) => {
+    chai.request(server)
+    .get('/api/user/loggedin')
     .end((err, res) => {
       res.should.have.status(200);
       done();
@@ -78,7 +82,6 @@ describe('user login method', () => {
 
 describe('user get roles method', () => {
   it('should get user roles for userid', (done) => {
-    //chai.request(server)
     agent
     .post('/api/user/roles')
     .send({ userid: 1 })

@@ -20,24 +20,33 @@ export function loginUser(email, password) {
     .then(response => {
       try {
         dispatch(loginUserSuccess(email));
-        //dispatch(pushState(null, redirect));
+        return loginUserSuccess(email);
       } catch (error) {
-        dispatch(loginUserFailure({
+        dispatch(
+          loginUserFailure({
+            response: {
+              status: 403,
+              statusText: error
+            }
+          })
+        );
+        return loginUserFailure({
           response: {
             status: 403,
             statusText: error
           }
-        }));
+        });
       }
     })
     .catch(error => {
       dispatch(loginUserFailure(error));
+      return loginUserFailure(error);
     })
   }
 }
 
 export function loginUserSuccess(email) {
-  localStorage.setItem('currentUser', email);
+  // localStorage.setItem('currentUser', email);
   return {
     type: authConstants.LOGIN_USER_SUCCESS,
     payload: {
@@ -48,7 +57,7 @@ export function loginUserSuccess(email) {
 }
 
 export function loginUserFailure(error) {
-  localStorage.removeItem('currentUser');
+  // localStorage.removeItem('currentUser');
   return {
     type: authConstants.LOGIN_USER_FAILURE,
     payload: {
@@ -59,43 +68,6 @@ export function loginUserFailure(error) {
 }
 
 //register
-// export function registerUser(firstname, surname, email, password) {
-//   console.log('test');
-//   return function(dispatch) {
-//     return fetch('http://localhost:3000/api/user/register/', {
-//       method: 'post',
-//       headers: {
-//         'Accept': 'application/json',
-//         'Content-Type': 'application/json'
-//       },
-//       body: JSON.stringify({firstname: firstname, surname: surname, email: email, password: password})
-//     })
-//     // .then(apiUtils.checkHttpStatus)
-//     //.then(parseJSON)
-//     .then((response) => {
-//       try {
-//         dispatch(registerUserSuccess(email));
-//         //dispatch(pushState(null, redirect));
-//       }
-//       catch (error) {
-//         console.log('111');
-//         dispatch(
-//           registerUserFailure({
-//             response: {
-//               status: 403,
-//               statusText: error
-//             }
-//           })
-//         );
-//       }
-//     })
-//     .catch(error => {
-//         console.log('222');
-//       dispatch(registerUserFailure(error));
-//     })
-//   }
-// }
-
 export function registerUser(firstname, surname, email, password) {
   return (dispatch) => {
     return fetch('http://localhost:3000/api/user/register/', {
@@ -110,12 +82,11 @@ export function registerUser(firstname, surname, email, password) {
     //.then(parseJSON)
     .then((response) => {
       try {
-        console.log(response);
         dispatch(registerUserSuccess(response));
+        return registerUserSuccess(response);
         //dispatch(pushState(null, redirect));
       }
       catch (error) {
-        console.log('111');
         dispatch(
           registerUserFailure({
             response: {
@@ -127,15 +98,13 @@ export function registerUser(firstname, surname, email, password) {
       }
     })
     .catch(error => {
-      console.log('222');
       dispatch(registerUserFailure(error));
+      return registerUserFailure(error);
     })
   }
 }
 
 export function registerUserSuccess(user) {
-  console.log('registerUserSuccess fired' + user);
-  // localStorage.setItem('currentUser', user);
   return {
     type: authConstants.REGISTER_USER_SUCCESS,
     payload: {
@@ -147,40 +116,11 @@ export function registerUserSuccess(user) {
 }
 
 export function registerUserFailure(error) {
-  console.log('registerUserFailure fired');
-  localStorage.removeItem('currentUser');
   return {
     type: authConstants.REGISTER_USER_FAILURE,
     payload: {
       status: error.response.status,
       statusText: error.response.statusText
     }
-  }
-}
-
-//increment
-export function increment(index) {
-  return {
-    type: 'INCREMENT_LIKES',
-    index
-  }
-}
-
-//add comment
-export function addComment(postId, author, comment) {
-  return {
-    type: 'ADD_COMMENT',
-    postId,
-    author,
-    comment
-  }
-}
-
-//remove comment
-export function removeComment(postId, i) {
-  return {
-    type: 'REMOVE_COMMENT',
-    i,
-    postId
   }
 }

@@ -10,7 +10,7 @@ module.exports = function(app, passport) {
       if (req.body.email === undefined){
         res.statusMessage = 'No data sent';
         res.status(401);
-        return;
+        res.send();
       }
 
       //check if email has already been registered
@@ -18,7 +18,7 @@ module.exports = function(app, passport) {
         if (users.length > 0) {
           res.statusMessage = 'A user with this e-mail already exists';
           res.status(401);
-          return;
+          res.send();
         }
 
         //encrypt the password
@@ -69,17 +69,17 @@ module.exports = function(app, passport) {
     }));
 
     //USER LOGIN SUCCESSS
-    app.get('/api/user/loggedin', function(req, res){
+    app.all('/api/user/loggedin', function(req, res){
       res.send('Logged in');
     });
 
     //USER UNAUTHORIZED
-    app.get('/api/user/unauthorized', function(req, res){
+    app.all ('/api/user/unauthorized', function(req, res){
       res.status(401).send('Unauthorized');
     });
 
     //USER ROLES
-    app.post('/api/user/roles', security.isAuthenticated, function(req, res, next) {
+    app.post('/api/user/roles', security.isAuthenticated, function(req, res) {
       if (req.body.userid === undefined) return res.status(401).send('No data sent');
 
       var onlyAdmins = security.onlyAdminsPromise(req, res);

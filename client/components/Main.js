@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router';
 import Navbar from './Navbar.js';
 import Home from './Home.js';
-import Register from './user/Register.js';
 import Footer from './Footer.js';
 
 const Main = React.createClass({

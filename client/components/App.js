@@ -9,11 +9,6 @@ function mapStateToProps(state) {
   }
 }
 
-// function mapDispatchToProps(dispatch) {
-//   return bindActionCreators(actionCreators, dispatch);
-// }
-
-// const App = connect(mapStateToProps, mapDispatchToProps)(Main);
 const App = connect(mapStateToProps, dispatch => ({
   actions: actionCreators(dispatch)
 }))(Main);
