@@ -85,7 +85,6 @@ export function registerUser(firstname, surname, email, password) {
       try {
         dispatch(registerUserSuccess(response));
         return registerUserSuccess(response);
-        //dispatch(pushState(null, redirect));
       }
       catch (error) {
         dispatch(
@@ -110,7 +109,7 @@ export function registerUserSuccess(user) {
     type: authConstants.REGISTER_USER_SUCCESS,
     payload: {
       status: 200,
-      statusText: "You have successfully registered your account",
+      statusText: "You have successfully registered your account. Please check your e-mail to complete the verification step.",
       user: user
     }
   }

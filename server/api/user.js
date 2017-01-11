@@ -1,7 +1,10 @@
-import db from './../../common/database/db.js';
+import db from './../../common/database/db';
 const bcrypt = require('bcrypt');
-import user from './../../common/models/user.js';
-import security from './../../common/security.js';
+import user from './../../common/models/user';
+import security from './../../common/security';
+import random from './../../common/utils/random';
+import VerifyEmailTemplate from './../../common/email/verifyemailtemplate';
+import MailSender from './../../common/email/mailsender';
 
 module.exports = function(app, passport) {
 
@@ -19,6 +22,7 @@ module.exports = function(app, passport) {
           res.statusMessage = 'A user with this e-mail already exists';
           res.status(401);
           res.send();
+          return;
         }
 
         //encrypt the password
@@ -32,11 +36,50 @@ module.exports = function(app, passport) {
           password: password
         },
         function(err,inserted) {
-          (err) ?
-          res.status(401).send(err) :
-          res.send('Successfully registered');
+          if (err) { res.status(401).send(err); return; }
+          else {
+            //save email verification code
+            db.emailverification.save({
+                userid: inserted.id,
+                code: random.randomString(16)
+            },
+            //send verification email
+            function(err, inserted) {
+              if (err) throw err;
+              MailSender.sendVerificationEmail(req.body.email, inserted.code)
+              .then((result) => {
+                res.send('Successfully registered');
+              });
+            })
+          }
         });
       })
+    });
+
+    //VERIFY EMAIL CODE
+    app.all('/api/user/verifyemail/:code', function(req, res) {
+        if (!req.params.code) {
+          res.statusMessage = 'No data sent';
+          res.status(401);
+          res.send();
+          return;
+        }
+
+        //check the verification code
+        db.emailverification.where("code=$1", req.params.code, function(err, code) {
+          if (code.length === 0) {
+            res.statusMessage = 'Invalid verification code';
+            res.status(401);
+            res.send();
+            return;
+          }
+
+          //set user emailverified as true
+          db.users.save({id: code.userid, emailverified: true}, function(err, res){
+            if (err) { res.status(401).send(err); return; }
+            res.send('Your account has now been verified');
+          });
+        })
     });
 
     //USER DELETE BY EMAIL

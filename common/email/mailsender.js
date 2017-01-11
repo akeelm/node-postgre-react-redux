@@ -1,8 +1,9 @@
 const nodemailer = require('nodemailer');
+import VerifyEmailTemplate from './verifyemailtemplate';
 require('dotenv').config();
 
-export default class MailSender {
-  transporter() {
+class MailSender {
+  static transporter() {
     return nodemailer.createTransport({
       service: process.env.EMAIL_SERVICE,
       auth: {
@@ -12,7 +13,7 @@ export default class MailSender {
     });
   }
 
-  sendMail(to, subject, textMessage, htmlMessage) {
+  static sendMail(to, subject, textMessage, htmlMessage) {
     let mailOptions = {
       from: `"node-postgre-react" <${process.env.TEST_EMAIL}>`,
       to: to,
@@ -23,4 +24,15 @@ export default class MailSender {
 
     return this.transporter().sendMail(mailOptions);
   }
+
+  static sendVerificationEmail(to, verificationCode) {
+      let verifyEmailTemplate = new VerifyEmailTemplate(to, verificationCode);
+      return this.sendMail(
+        verifyEmailTemplate.getToAddress(),
+        verifyEmailTemplate.getSubject(),
+        verifyEmailTemplate.getTextTemplate(),
+        verifyEmailTemplate.getHtmlTemplate()
+      );
+  }
 }
+export default MailSender;

@@ -29,13 +29,10 @@ describe('user register method', () => {
       done();
     });
   });
-});
-
-/*
   it('should allow registration', (done) => {
     chai.request(server)
     .post('/api/user/register')
-    .send({ email: 'test@hotmail.com',
+    .send({ email: 'akeelm@gmail.com',
       firstname: 'test',
       surname: 'test',
       password: 'password'
@@ -44,21 +41,30 @@ describe('user register method', () => {
       res.should.have.status(200);
       done();
     });
-  });
+  }).timeout(15000);
 });
 
-describe('user delete method', () => {
-  it('should allow deletion of user', (done) => {
+describe('email verified method', () => {
+  it('should have method to verify email', (done) => {
     chai.request(server)
-    .post('/api/user/delete')
-    .send({ email: 'test@hotmail.com' })
+    .post('/api/user/verifyemail/argargarg223')
     .end((err, res) => {
-      res.should.have.status(200);
+      res.should.have.status(401);
       done();
     });
   });
 });
-*/
+// describe('user delete method', () => {
+//   it('should allow deletion of user', (done) => {
+//     chai.request(server)
+//     .post('/api/user/delete')
+//     .send({ email: 'test@hotmail.com' })
+//     .end((err, res) => {
+//       res.should.have.status(200);
+//       done();
+//     });
+//   });
+// });
 
 describe('user login method', () => {
   it('should allow user login', (done) => {
