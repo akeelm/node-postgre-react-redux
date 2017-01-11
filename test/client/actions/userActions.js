@@ -1,3 +1,4 @@
+require('dotenv').config();
 import * as actions from './../../../client/actions/userActions';
 import * as authConstants from './../../../client/constants/auth';
 const assert = require('assert');
@@ -31,7 +32,7 @@ function configureStore(mocks) {
 
 describe('actions::userActions::loginUser', (done) => {
   it('should return LOGIN_USER_SUCCESS for a valid user', (done) => {
-    actions.loginUser('akeelm_uk@hotmail.com', 'password')(configureStore)
+    actions.loginUser(process.env.TEST_EMAIL, process.env.TEST_PASSWORD)(configureStore)
     .then((result) => {
       expect(result.type).to.equal(authConstants.LOGIN_USER_SUCCESS);
       done();

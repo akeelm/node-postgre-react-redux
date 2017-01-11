@@ -1,9 +1,9 @@
+require('dotenv').config()
 const assert = require('assert');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require(process.cwd() + '/server');
 const should = chai.should();
-require('dotenv').config()
 chai.use(chaiHttp);
 var agent = chai.request.agent(server);
 
@@ -19,10 +19,10 @@ describe('user register method', () => {
   it('should not allow duplicate emails', (done) => {
     chai.request(server)
     .post('/api/user/register')
-    .send({ email: 'akeelm_uk@hotmail.com',
+    .send({ email: process.env.TEST_EMAIL,
       firstname: 'akeel',
       surname: 'mughal',
-      password: 'password'
+      password: process.env.TEST_PASSWORD
     })
     .end((err, res) => {
       res.should.have.status(401);
@@ -64,7 +64,7 @@ describe('user login method', () => {
   it('should allow user login', (done) => {
     agent
     .post('/api/user/login')
-    .send({ email: 'akeelm_uk@hotmail.com', password: 'password' })
+    .send({ email: process.env.TEST_EMAIL, password: process.env.TEST_PASSWORD })
     .end((err, res) => {
       res.should.have.status(200);
       done();

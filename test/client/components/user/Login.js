@@ -1,3 +1,4 @@
+require('dotenv').config();
 import React from 'react';
 import {mount} from 'enzyme';
 import {expect} from 'chai';
@@ -46,8 +47,8 @@ describe('LoginComponent', () => {
     expect(inputField.text()).to.equal('Required');
   })
   it('should allow submission of the form', () => {
-    subject.find('input[name="email"]').simulate('change', {target: {value: 'akeelm_uk@hotmail.com'}});
-    subject.find('input[name="password"]').simulate('change', {target: {value: 'test'}});
+    subject.find('input[name="email"]').simulate('change', {target: {value: process.env.TEST_EMAIL}});
+    subject.find('input[name="password"]').simulate('change', {target: {value: process.env.TEST_PASSWORD}});
     debugger
     expect(inputField.text()).to.equal('Required');
   })

@@ -1,3 +1,4 @@
+require('dotenv').config();
 import fetch from 'isomorphic-fetch';
 import * as authConstants from './../constants/auth';
 import * as apiUtils from './../utils/api_utils';
@@ -6,7 +7,7 @@ import * as apiUtils from './../utils/api_utils';
 export function loginUser(email, password) {
   return function(dispatch) {
     //dispatch(loginUserRequest());
-    return fetch('http://localhost:3000/api/user/login/', {
+    return fetch(`${process.env.SERVER_URL}/api/user/login/`, {
       method: 'post',
       credentials: 'include',
       headers: {
@@ -70,7 +71,7 @@ export function loginUserFailure(error) {
 //register
 export function registerUser(firstname, surname, email, password) {
   return (dispatch) => {
-    return fetch('http://localhost:3000/api/user/register/', {
+    return fetch(`${process.env.SERVER_URL}/api/user/register/`, {
       method: 'post',
       headers: {
         'Accept': 'application/json',

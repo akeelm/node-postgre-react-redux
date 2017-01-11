@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 exports.up = function(pgm) {
   pgm.sql(
   `CREATE TABLE users
@@ -13,7 +15,7 @@ exports.up = function(pgm) {
 
   pgm.sql(
     `INSERT INTO public.users(firstname, surname, password, email, emailverified)
-    VALUES ('akeel', 'mughal', 'test', 'akeelm_uk@hotmail.com', true);`
+    VALUES ('akeel', 'mughal', ${process.env.TEST_PASSWORD}, ${process.env.TEST_EMAIL}, true);`
   );
 };
 
