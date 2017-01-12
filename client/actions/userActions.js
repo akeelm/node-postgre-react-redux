@@ -1,6 +1,7 @@
 import fetch from 'isomorphic-fetch';
 import * as authConstants from './../constants/auth';
 import * as apiUtils from './../utils/api_utils';
+import {reset} from 'redux-form';
 
 //login
 export function loginUser(email, password) {
@@ -20,6 +21,7 @@ export function loginUser(email, password) {
     .then(response => {
       try {
         dispatch(loginUserSuccess(email));
+        dispatch(reset('loginForm'));
         return loginUserSuccess(email);
       } catch (error) {
         dispatch(
@@ -70,7 +72,6 @@ export function loginUserFailure(error) {
 //register
 export function registerUser(firstname, surname, email, password) {
   return (dispatch) => {
-    console.log(`${process.env.SERVER_URL}/api/user/register/`);
     return fetch(`${process.env.SERVER_URL}/api/user/register/`, {
       method: 'post',
       headers: {
@@ -84,10 +85,10 @@ export function registerUser(firstname, surname, email, password) {
     .then((response) => {
       try {
         dispatch(registerUserSuccess(response));
+        dispatch(reset('registerForm'));
         return registerUserSuccess(response);
       }
       catch (error) {
-        console.log('first error in register action: ' + error);
         dispatch(
           registerUserFailure({
             response: {
@@ -105,7 +106,6 @@ export function registerUser(firstname, surname, email, password) {
       }
     })
     .catch(error => {
-      console.log('final error in register action: ' + error);
       dispatch(registerUserFailure(error));
       return registerUserFailure(error);
     })

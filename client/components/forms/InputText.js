@@ -4,7 +4,7 @@ import RenderField from './RenderField.js';
 
 const InputText = (props) => (
   <div className="form-group is-empty">
-    <label className="col-md-2 control-label">
+    <label className="col-md-2 control-label xx">
       {props.placeholder}
     </label>
     <div className="col-md-10">

@@ -7,7 +7,7 @@ import LoadingSpinner from './../forms/LoadingSpinner';
 
 class Login extends React.Component{
   handleSubmit(values) {
-    this.props.actions.userActions.loginUser(values.email, values.password);
+    return this.props.actions.userActions.loginUser(values.email, values.password);
   }
   render() {
     const { handleSubmit, submitting, valid, pristine } = this.props;
@@ -28,7 +28,7 @@ class Login extends React.Component{
 
                     <div className="form-group">
                       <div className="col-md-10 col-md-offset-2">
-                        <button className="btn btn-primary" type="submit" disabled={submitting || !valid || pristine}>Submit</button>
+                        <button className="btn btn-primary pull-left" type="submit" disabled={submitting || !valid || pristine}>Submit</button>
                         <LoadingSpinner {... {submitting: submitting } } />
                       </div>
                     </div>
@@ -48,8 +48,6 @@ class Login extends React.Component{
 
 Login = reduxForm({
   form: 'loginForm', // a unique name for this form
-  touchOnBlue: false,
-  touchOnChange: false
 })(Login);
 
 

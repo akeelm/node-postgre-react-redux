@@ -2,6 +2,7 @@
 //1. the action (info about what happened)
 //2. copy of current state
 import * as authConstants from './../constants/auth';
+import {reducer as formReducer} from 'redux-form';
 
 function createReducer(initialState, reducerMap) {
     return (state = initialState, action) => {
@@ -36,7 +37,7 @@ export default createReducer(initialState, {
       'token': payload.token,
       'email': payload.username,
       'status': payload.status,
-      'statusText': 'You have been successfully logged in.'
+      'statusText': 'You have been successfully logged in.',
     });
   },
   [authConstants.LOGIN_USER_FAILURE]: (state, payload) => {
