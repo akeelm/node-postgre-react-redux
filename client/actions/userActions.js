@@ -1,4 +1,3 @@
-require('dotenv').config();
 import fetch from 'isomorphic-fetch';
 import * as authConstants from './../constants/auth';
 import * as apiUtils from './../utils/api_utils';
@@ -71,6 +70,7 @@ export function loginUserFailure(error) {
 //register
 export function registerUser(firstname, surname, email, password) {
   return (dispatch) => {
+    console.log(`${process.env.SERVER_URL}/api/user/register/`);
     return fetch(`${process.env.SERVER_URL}/api/user/register/`, {
       method: 'post',
       headers: {
@@ -87,6 +87,7 @@ export function registerUser(firstname, surname, email, password) {
         return registerUserSuccess(response);
       }
       catch (error) {
+        console.log('first error in register action: ' + error);
         dispatch(
           registerUserFailure({
             response: {
@@ -95,9 +96,16 @@ export function registerUser(firstname, surname, email, password) {
             }
           })
         );
+        return registerUserFailure({
+          response: {
+            status: 403,
+            statusText: error
+          }
+        })
       }
     })
     .catch(error => {
+      console.log('final error in register action: ' + error);
       dispatch(registerUserFailure(error));
       return registerUserFailure(error);
     })

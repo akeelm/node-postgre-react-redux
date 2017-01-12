@@ -38,7 +38,6 @@ export default createReducer(initialState, {
       'status': payload.status,
       'statusText': 'You have been successfully logged in.'
     });
-
   },
   [authConstants.LOGIN_USER_FAILURE]: (state, payload) => {
     return Object.assign({}, state, {
