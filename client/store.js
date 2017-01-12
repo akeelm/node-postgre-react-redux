@@ -1,17 +1,10 @@
 import { applyMiddleware, createStore, compose } from 'redux';
-import { syncHistoryWithStore } from 'react-router-redux';
+import { syncHistoryWithStore, routerMiddleware } from 'react-router-redux';
 import { browserHistory } from 'react-router';
 import rootReducer from "./reducers/baseReducer";
 import thunk from 'redux-thunk';
 
-//create an object for the default data
-const defaultState = {
-  //posts,
-  //comments,
-  //currentUser: undefined
-};
-
-const middleware = applyMiddleware(thunk);
+const middleware = applyMiddleware(thunk, routerMiddleware(browserHistory));
 
 let createStoreWithMiddleware = compose(
   middleware
@@ -19,7 +12,6 @@ let createStoreWithMiddleware = compose(
 
 export const store = createStoreWithMiddleware(createStore)(
     rootReducer,
-    defaultState,
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
 

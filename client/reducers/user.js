@@ -70,4 +70,10 @@ export default createReducer(initialState, {
       'statusText': `Registration failure: ${payload.statusText}`
     });
   },
+  [authConstants.RESET_USER_STATUS]: (state, payload) => {
+    return Object.assign({}, state, {
+      'status': null,
+      'statusText': null
+    });
+  },
 });

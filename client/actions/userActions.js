@@ -2,6 +2,7 @@ import fetch from 'isomorphic-fetch';
 import * as authConstants from './../constants/auth';
 import * as apiUtils from './../utils/api_utils';
 import {reset} from 'redux-form';
+import { push } from 'react-router-redux';
 
 //login
 export function loginUser(email, password) {
@@ -22,6 +23,10 @@ export function loginUser(email, password) {
       try {
         dispatch(loginUserSuccess(email));
         dispatch(reset('loginForm'));
+        setTimeout(() => {
+          dispatch(resetUserStatus());
+          dispatch(push('/'));
+        }, 2000);
         return loginUserSuccess(email);
       } catch (error) {
         dispatch(
@@ -130,5 +135,12 @@ export function registerUserFailure(error) {
       status: error.response.status,
       statusText: error.response.statusText
     }
+  }
+}
+
+export function resetUserStatus() {
+  // localStorage.setItem('currentUser', email);
+  return {
+    type: authConstants.RESET_USER_STATUS
   }
 }
