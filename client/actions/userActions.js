@@ -144,3 +144,68 @@ export function resetUserStatus() {
     type: authConstants.RESET_USER_STATUS
   }
 }
+
+export function validateUserEmail(code) {
+  return function(dispatch) {
+    //dispatch(loginUserRequest());
+    return fetch(`${process.env.SERVER_URL}/api/user/verifyemail/${code}/`, {
+      method: 'get',
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+    })
+    .then(apiUtils.checkHttpStatus)
+    //.then(parseJSON)
+    .then(response => {
+      try {
+        dispatch(verifyEmailSuccess());
+        setTimeout(() => {
+          dispatch(resetUserStatus());
+          dispatch(push('/'));
+        }, 2000);
+        return verifyEmailSuccess();
+      } catch (error) {
+        dispatch(
+          verifyEmailFailure({
+            response: {
+              status: 403,
+              statusText: error
+            }
+          })
+        );
+        return verifyEmailFailure({
+          response: {
+            status: 403,
+            statusText: error
+          }
+        });
+      }
+    })
+    .catch(error => {
+      dispatch(verifyEmailFailure(error));
+      return verifyEmailFailure(error);
+    })
+  }
+}
+
+export function verifyEmailSuccess() {
+  return {
+    type: authConstants.VERIFY_USER_EMAIL_SUCCESS,
+    payload: {
+      status: 200,
+      statusText: "Thank you for verifying your account."
+    }
+  }
+}
+
+export function verifyEmailFailure(error) {
+  return {
+    type: authConstants.VERIFY_USER_EMAIL_SUCCESS,
+    payload: {
+      status: error.response.status,
+      statusText: error.response.statusText
+    }
+  }
+}

@@ -76,4 +76,16 @@ export default createReducer(initialState, {
       'statusText': null
     });
   },
+  [authConstants.VERIFY_USER_EMAIL_SUCCESS]: (state, payload) => {
+    return Object.assign({}, state, {
+      'status': payload.status,
+      'statusText': payload.statusText
+    });
+  },
+  [authConstants.VERIFY_USER_EMAIL_FAILURE]: (state, payload) => {
+    return Object.assign({}, state, {
+      'status': payload.status,
+      'statusText': `Verification failure: ${payload.statusText}`
+    });
+  },
 });

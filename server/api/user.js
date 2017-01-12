@@ -66,17 +66,19 @@ module.exports = function(app, passport) {
         }
 
         //check the verification code
-        db.emailverification.where("code=$1", req.params.code, function(err, code) {
-          if (code.length === 0) {
+        db.emailverification.findOne({code: req.params.code}, function(err, code) {
+          if (!code) {
             res.statusMessage = 'Invalid verification code';
             res.status(401);
             res.send();
             return;
           }
 
-          //set user emailverified as true
-          db.users.save({id: code.userid, emailverified: true}, function(err, res){
+          debugger;
+          //set user emailverified as true and delete validation entry
+          db.users.save({id: code.userid, emailverified: 'true'}, function(err){
             if (err) { res.status(401).send(err); return; }
+            db.emailverification.destroy({id: code.id });
             res.send('Your account has now been verified');
           });
         })

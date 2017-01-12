@@ -5,6 +5,9 @@ const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   devtool: 'eval',
+  devServer: {
+      historyApiFallback: true
+  },
   entry: [
     'webpack-hot-middleware/client',
     path.join(__dirname, 'client/index')

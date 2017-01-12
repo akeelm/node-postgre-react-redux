@@ -29,18 +29,25 @@ app.use(session({ secret: 'SECRET' }));
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get('/:page', function(req, res) {
-  res.sendFile(path.join(__dirname, './client/index.html'));
-});
-app.get('/', function(req, res) {
-  res.sendFile(path.join(__dirname, './client/index.html'));
-});
-
+//the routes
 app.use('/static', express.static( __dirname + '/client/styles/bootstrap/js'));
 app.use('/static', express.static( __dirname + '/client/assets'));
 
 import recursiveRoutes from './recursive-routes.js';
 recursiveRoutes('./server/', app, passport);
+
+app.get('/:page', function(req, res) {
+  res.sendFile(path.join(__dirname, './client/index.html'));
+});
+app.get('/:page/:page2/', function(req, res) {
+  res.sendFile(path.join(__dirname, './client/index.html'));
+});
+app.get('/:page/:page2/:page3', function(req, res) {
+  res.sendFile(path.join(__dirname, './client/index.html'));
+});
+app.get('/', function(req, res) {
+  res.sendFile(path.join(__dirname, './client/index.html'));
+});
 
 app.use(cookieParser());
 
