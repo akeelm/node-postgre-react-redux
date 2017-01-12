@@ -1,9 +1,9 @@
 import React from 'react';
-import FormStatus from './../forms/FormStatus.js';
-import InputText from './../forms/InputText.js';
+import FormStatus from './../forms/FormStatus';
+import InputText from './../forms/InputText';
 import { Field, reduxForm } from 'redux-form';
-import * as validate from './../../constants/validate.js';
-
+import * as validate from './../../constants/validate';
+import LoadingSpinner from './../forms/LoadingSpinner';
 
 class Register extends React.Component{
   handleSubmit(values) {
@@ -36,7 +36,8 @@ class Register extends React.Component{
 
                     <div className="form-group">
                       <div className="col-md-10 col-md-offset-2">
-                        <button className="btn btn-primary" type="submit" disabled={pristine || submitting || !valid}>Submit</button>
+                        <button className="btn btn-primary pull-left" type="submit" disabled={pristine || submitting || !valid}>Submit</button>
+                        <LoadingSpinner {... {submitting: submitting } } />
                       </div>
                     </div>
 

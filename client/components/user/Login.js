@@ -3,6 +3,7 @@ import FormStatus from './../forms/FormStatus.js';
 import InputText from './../forms/InputText.js';
 import { Field, reduxForm } from 'redux-form';
 import * as validate from './../../constants/validate.js';
+import LoadingSpinner from './../forms/LoadingSpinner';
 
 class Login extends React.Component{
   handleSubmit(values) {
@@ -28,6 +29,7 @@ class Login extends React.Component{
                     <div className="form-group">
                       <div className="col-md-10 col-md-offset-2">
                         <button className="btn btn-primary" type="submit" disabled={submitting || !valid || pristine}>Submit</button>
+                        <LoadingSpinner {... {submitting: submitting } } />
                       </div>
                     </div>
 
