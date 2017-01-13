@@ -9,6 +9,9 @@ class Login extends React.Component{
   handleSubmit(values) {
     return this.props.actions.userActions.loginUser(values.email, values.password);
   }
+  componentWillUnmount() {
+    this.props.actions.userActions.resetUserStatus();
+  }
   render() {
     const { handleSubmit, submitting, valid, pristine } = this.props;
     return (

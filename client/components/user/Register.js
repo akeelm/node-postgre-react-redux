@@ -9,6 +9,9 @@ class Register extends React.Component{
   handleSubmit(values) {
     return this.props.actions.userActions.registerUser(values.firstname, values.surname, values.email, values.password);
   }
+  componentWillUnmount() {
+    this.props.actions.userActions.resetUserStatus();
+  }
   render() {
     const {
       fields: { password, confirmPassword },

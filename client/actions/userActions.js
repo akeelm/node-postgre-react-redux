@@ -24,7 +24,6 @@ export function loginUser(email, password) {
         dispatch(loginUserSuccess(email));
         dispatch(reset('loginForm'));
         setTimeout(() => {
-          dispatch(resetUserStatus());
           dispatch(push('/'));
         }, 2000);
         return loginUserSuccess(email);
@@ -162,7 +161,6 @@ export function validateUserEmail(code) {
       try {
         dispatch(verifyEmailSuccess());
         setTimeout(() => {
-          dispatch(resetUserStatus());
           dispatch(push('/'));
         }, 2000);
         return verifyEmailSuccess();
