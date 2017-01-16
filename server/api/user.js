@@ -143,7 +143,6 @@ module.exports = function(app, passport) {
 
       let user = security.getUserFromToken(token);
       res.send({user: user, token: token });
-      // if (!user.email) res.send({user: user, token: token });
     });
 
   };

@@ -13,6 +13,7 @@ import App from './components/App';
 import Home from './components/Home';
 import Register from './components/user/Register';
 import Login from './components/user/Login';
+import Logout from './components/user/Logout';
 import VerifyEmail from './components/user/VerifyEmail';
 
 const router = (
@@ -22,6 +23,7 @@ const router = (
         <IndexRoute component={Home}></IndexRoute>
         <Route path="/register/" component={Register}></Route>
         <Route path="/login/" component={Login}></Route>
+        <Route path="/logout/" component={Logout}></Route>
         <Route path="/user/verify/:code" component={VerifyEmail}></Route>
       </Route>
     </Router>

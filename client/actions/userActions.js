@@ -7,7 +7,6 @@ import { push } from 'react-router-redux';
 //login
 export function loginUser(email, password) {
   return function(dispatch) {
-    //dispatch(loginUserRequest());
     return fetch(`${process.env.SERVER_URL}/api/user/login/`, {
       method: 'post',
       credentials: 'include',
@@ -64,7 +63,6 @@ export function loginUserSuccess(email, token) {
 }
 
 export function loginUserFailure(error) {
-  // localStorage.removeItem('currentUser');
   return {
     type: authConstants.LOGIN_USER_FAILURE,
     payload: {
@@ -138,7 +136,6 @@ export function registerUserFailure(error) {
 }
 
 export function resetUserStatus() {
-  // localStorage.setItem('currentUser', email);
   return {
     type: authConstants.RESET_USER_STATUS
   }
@@ -252,7 +249,6 @@ export function getFromTokenSuccess(token, user) {
     type: authConstants.VALIDATE_USER_FROM_TOKEN_SUCCESS,
     payload: {
       status: 200,
-      statusText: "Token validated",
       token: token,
       email: user.email,
       emailverified: user.emailverified
@@ -265,7 +261,27 @@ export function getFromTokenFailure(error) {
     type: authConstants.VALIDATE_USER_FROM_TOKEN_FAILURE,
     payload: {
       status: error.response.status,
-      statusText: error.response.statusText
+    }
+  }
+}
+
+export function logoutUser() {
+  return function(dispatch) {
+    localStorage.setItem('token', null);
+    dispatch(push('/'));
+    dispatch(logoutUserSuccess());
+    return logoutUserSuccess();
+  }
+}
+
+export function logoutUserSuccess() {
+  return {
+    type: authConstants.LOGOUT_USER,
+    payload: {
+      status: 200,
+      email: null,
+      token: null,
+      emailverified: null
     }
   }
 }
