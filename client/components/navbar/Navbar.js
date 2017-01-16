@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
+import NavbarLoginRegister from './NavbarLoginRegister';
+import NavbarLoggedIn from './NavbarLoggedIn';
 
 class Navbar extends React.Component{
   constructor(props) {
@@ -20,14 +22,12 @@ class Navbar extends React.Component{
               <a className="navbar-brand">node.js-PostgreSql-React</a>
             </div>
             <div className="collapse navbar-collapse" id="navigation">
-              <ul className="nav navbar-nav navbar-right">
-                <li>
-                  <Link to={"/login/"}>Login</Link>
-                </li>
-                <li>
-                  <Link to={"/register/"}>Register</Link>
-                </li>
-              </ul>
+            {
+              //if logged in remove the "Login / Register" option
+              (this.props.user.isAuthenticated) ?
+              <NavbarLoggedIn {... {email: this.props.user.email}}/> :
+              <NavbarLoginRegister />
+            }
             </div>
           </div>
         </nav>

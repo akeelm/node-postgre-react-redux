@@ -15,9 +15,9 @@ function createReducer(initialState, reducerMap) {
 }
 
 const initialState = {
-    token: null,
+    token: localStorage.getItem('token'),
     email: null,
-    isAuthenticated: false,
+    isAuthenticated: localStorage.getItem('token') ? true : false,
     isAuthenticating: false,
     status: null,
     statusText: null
@@ -35,7 +35,7 @@ export default createReducer(initialState, {
       'isAuthenticating': false,
       'isAuthenticated': true,
       'token': payload.token,
-      'email': payload.username,
+      'email': payload.email,
       'status': payload.status,
       'statusText': 'You have been successfully logged in.',
     });
@@ -86,6 +86,26 @@ export default createReducer(initialState, {
     return Object.assign({}, state, {
       'status': payload.status,
       'statusText': `Verification failure: ${payload.statusText}`
+    });
+  },
+  [authConstants.VALIDATE_USER_FROM_TOKEN_SUCCESS]: (state, payload) => {
+    return Object.assign({}, state, {
+      'isAuthenticating': false,
+      'isAuthenticated': true,
+      'token': payload.token,
+      'email': payload.email,
+      'status': payload.status,
+      'statusText': payload.statusText,
+    });
+  },
+  [authConstants.VALIDATE_USER_FROM_TOKEN_FAILURE]: (state, payload) => {
+    return Object.assign({}, state, {
+      'isAuthenticating': false,
+      'isAuthenticated': false,
+      'token': null,
+      'email': null,
+      'status': payload.status,
+      'statusText': `Token invalid: ${payload.statusText}`
     });
   },
 });

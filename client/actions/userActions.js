@@ -18,15 +18,15 @@ export function loginUser(email, password) {
       body: JSON.stringify({email: email, password: password})
     })
     .then(apiUtils.checkHttpStatus)
-    //.then(parseJSON)
-    .then(response => {
+    .then(apiUtils.parseJSON)
+    .then((response) => {
       try {
-        dispatch(loginUserSuccess(email));
+        dispatch(loginUserSuccess(email, response.token));
         dispatch(reset('loginForm'));
         setTimeout(() => {
           dispatch(push('/'));
         }, 2000);
-        return loginUserSuccess(email);
+        return loginUserSuccess(email, response.token);
       } catch (error) {
         dispatch(
           loginUserFailure({
@@ -51,13 +51,14 @@ export function loginUser(email, password) {
   }
 }
 
-export function loginUserSuccess(email) {
-  // localStorage.setItem('currentUser', email);
+export function loginUserSuccess(email, token) {
+  localStorage.setItem('token', token);
   return {
     type: authConstants.LOGIN_USER_SUCCESS,
     payload: {
       status: 200,
-      email: email
+      email: email,
+      token: token
     }
   }
 }
@@ -85,7 +86,6 @@ export function registerUser(firstname, surname, email, password) {
       body: JSON.stringify({firstname: firstname, surname: surname, email: email, password: password})
     })
     .then(apiUtils.checkHttpStatus)
-    //.then(parseJSON)
     .then((response) => {
       try {
         dispatch(registerUserSuccess(response));
@@ -146,7 +146,6 @@ export function resetUserStatus() {
 
 export function validateUserEmail(code) {
   return function(dispatch) {
-    //dispatch(loginUserRequest());
     return fetch(`${process.env.SERVER_URL}/api/user/verifyemail/${code}/`, {
       method: 'get',
       credentials: 'include',
@@ -156,7 +155,6 @@ export function validateUserEmail(code) {
       },
     })
     .then(apiUtils.checkHttpStatus)
-    //.then(parseJSON)
     .then(response => {
       try {
         dispatch(verifyEmailSuccess());
@@ -201,6 +199,70 @@ export function verifyEmailSuccess() {
 export function verifyEmailFailure(error) {
   return {
     type: authConstants.VERIFY_USER_EMAIL_SUCCESS,
+    payload: {
+      status: error.response.status,
+      statusText: error.response.statusText
+    }
+  }
+}
+
+export function getFromToken() {
+  return function(dispatch) {
+    return fetch(`${process.env.SERVER_URL}/api/user/getFromToken/`, {
+      method: 'post',
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({token: localStorage.getItem('token')})
+    })
+    .then(apiUtils.checkHttpStatus)
+    .then(apiUtils.parseJSON)
+    .then(response => {
+      try {
+        dispatch(getFromTokenSuccess(response.token, response.user));
+        return getFromTokenSuccess(response.token, response.user);
+      } catch (error) {
+        dispatch(
+          getFromTokenFailure({
+            response: {
+              status: 403,
+              statusText: error
+            }
+          })
+        );
+        return getFromTokenFailure({
+          response: {
+            status: 403,
+            statusText: error
+          }
+        });
+      }
+    })
+    .catch(error => {
+      dispatch(getFromTokenFailure(error));
+      return getFromTokenFailure(error);
+    })
+  }
+}
+
+export function getFromTokenSuccess(token, user) {
+  return {
+    type: authConstants.VALIDATE_USER_FROM_TOKEN_SUCCESS,
+    payload: {
+      status: 200,
+      statusText: "Token validated",
+      token: token,
+      email: user.email,
+      emailverified: user.emailverified
+    }
+  }
+}
+
+export function getFromTokenFailure(error) {
+  return {
+    type: authConstants.VALIDATE_USER_FROM_TOKEN_FAILURE,
     payload: {
       status: error.response.status,
       statusText: error.response.statusText

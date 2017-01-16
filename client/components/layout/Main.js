@@ -1,10 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router';
-import Navbar from './Navbar.js';
-import Home from './Home.js';
+import Navbar from './../navbar/Navbar';
+import Home from './../Home.js';
 import Footer from './Footer.js';
 
 const Main = React.createClass({
+  componentWillMount() {
+    this.props.actions.userActions.getFromToken();
+  },
   render() {
     const bgImage = {
       transform: 'translate3d(0px, 0px, 0px)',
@@ -12,7 +15,7 @@ const Main = React.createClass({
     };
     return (
       <div>
-        <Navbar />
+        <Navbar {...this.props} />
         <div className="page-header header-filter clear-filter" data-parallax="active" style={bgImage}>
           <div className="container">
             <div className="row">

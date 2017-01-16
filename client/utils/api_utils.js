@@ -1,5 +1,5 @@
 export function parseJSON(response) {
-     return response.json()
+   return response.json();
 }
 
 export function checkHttpStatus(response) {

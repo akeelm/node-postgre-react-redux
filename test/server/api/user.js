@@ -76,14 +76,6 @@ describe('user login method', () => {
       done();
     });
   });
-  it('should have a success route end point', (done) => {
-    chai.request(server)
-    .get('/api/user/loggedin')
-    .end((err, res) => {
-      res.should.have.status(200);
-      done();
-    });
-  });
 });
 
 describe('user get roles method', () => {
@@ -91,6 +83,18 @@ describe('user get roles method', () => {
     agent
     .post('/api/user/roles')
     .send({ userid: 1 })
+    .end((err, res) => {
+      res.should.have.status(200);
+      done();
+    });
+  });
+});
+
+describe('get user from token method', () => {
+  it('should get user from token', (done) => {
+    agent
+    .post('/api/user/getfromtoken')
+    .send({ token: 'dfadfadkfmtest' })
     .end((err, res) => {
       res.should.have.status(200);
       done();

@@ -1,10 +1,11 @@
 import db from './database/db.js';
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 class security {
   static isAuthenticated(req, res, next) {
-    // do any checks you want to in here
-    // CHECK THE USER STORED IN SESSION FOR A CUSTOM VARIABLE
-    // you can do this however you want with whatever variables you set up
+    if (localStorage.getItem('token')) return next();
+
     if (req.isAuthenticated())
       return next();
 
@@ -23,6 +24,26 @@ class security {
         }
       });
     });
+  }
+
+  static isUserValid(req, res) {
+    return new Promise((resolve, reject) => {
+      let decoded = jwt.verify(req.token, process.env.APP_SECRET, (err, user) => {
+        if (err) {
+          return res.status(401).json({
+            success: false,
+            message: "Please login or register to complete this action"
+          });
+        } else {
+          req.user = user;
+          resolve();
+        }
+      });
+    });
+  }
+
+  static getUserFromToken(token) {
+    return jwt.verify(token, process.env.APP_SECRET);
   }
 }
 

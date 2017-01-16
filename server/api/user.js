@@ -74,7 +74,6 @@ module.exports = function(app, passport) {
             return;
           }
 
-          debugger;
           //set user emailverified as true and delete validation entry
           db.users.save({id: code.userid, emailverified: 'true'}, function(err){
             if (err) { res.status(401).send(err); return; }
@@ -115,7 +114,7 @@ module.exports = function(app, passport) {
 
     //USER LOGIN SUCCESSS
     app.all('/api/user/loggedin', function(req, res){
-      res.send('Logged in');
+      res.send({token : `${req.user.token}`});
     });
 
     //USER UNAUTHORIZED
@@ -138,5 +137,13 @@ module.exports = function(app, passport) {
       });
     });
 
+    app.post('/api/user/getfromtoken', function(req, res){
+      let token = req.body.token || req.query.token || req.headers['x-access-token'] || req.token;
+      if (!token) return res.status(401).json({ message: 'No token' });
+
+      let user = security.getUserFromToken(token);
+      res.send({user: user, token: token });
+      // if (!user.email) res.send({user: user, token: token });
+    });
 
   };
