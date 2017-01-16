@@ -94,6 +94,8 @@ export default createReducer(initialState, {
       'isAuthenticated': true,
       'token': payload.token,
       'email': payload.email,
+      'emailverified': payload.emailverified,
+      'roles': payload.roles,
       'status': payload.status,
       'statusText': payload.statusText,
     });
@@ -105,7 +107,6 @@ export default createReducer(initialState, {
       'token': null,
       'email': null,
       'status': payload.status,
-      'statusText': `Token invalid: ${payload.statusText}`
     });
   },
 });

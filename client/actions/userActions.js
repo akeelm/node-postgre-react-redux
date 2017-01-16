@@ -251,7 +251,8 @@ export function getFromTokenSuccess(token, user) {
       status: 200,
       token: token,
       email: user.email,
-      emailverified: user.emailverified
+      emailverified: user.emailverified,
+      roles: user.roles
     }
   }
 }

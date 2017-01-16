@@ -35,15 +35,17 @@ module.exports = function(passport) {
         passReqToCallback : true // allows us to pass back the entire request to the callback
         // callback with email and password from our form
     }, function(req, email, password, done) {
-        // find a user whose email is the same as the forms email
-        // we are checking to see if the user trying to login already exists
-        db.users.findOne({ 'email' :  email }, function(err, user) {
+        // find a matching user
+        db.user.with_roles_json(email, function(err, result) {
             // if there are any errors, return the error before anything else
             if (err) return done(err);
 
             // if no user is found, return the message
-            if (!user) return done(null, false, { message: 'No user found.' });
+            if (!result) return done(null, false, { message: 'No user found.' });
 
+            const user = result[0].users;
+
+            console.log(user);
             // if the user is found but the password is wrong
             if (!bcrypt.compareSync(password, user.password))
                 return done(null, false, { message: 'Wrong password.'});
@@ -53,13 +55,37 @@ module.exports = function(passport) {
               email: user.email,
               firstname: user.firstname,
               surname: user.surname,
-              emailverified: user.emailverified
+              emailverified: user.emailverified,
+              roles: user.roles
             };
 
             let token = jwt.sign(payload, process.env.APP_SECRET, { expiresIn: "1 day" });
             // all is well, return token
             return done(null, token);
-        });
+        })
+        // db.users.findOne({ 'email' :  email }, function(err, user) {
+        //     // if there are any errors, return the error before anything else
+        //     if (err) return done(err);
+        //
+        //     // if no user is found, return the message
+        //     if (!user) return done(null, false, { message: 'No user found.' });
+        //
+        //     // if the user is found but the password is wrong
+        //     if (!bcrypt.compareSync(password, user.password))
+        //         return done(null, false, { message: 'Wrong password.'});
+        //
+        //     const payload = {
+        //       id: user.id,
+        //       email: user.email,
+        //       firstname: user.firstname,
+        //       surname: user.surname,
+        //       emailverified: user.emailverified
+        //     };
+        //
+        //     let token = jwt.sign(payload, process.env.APP_SECRET, { expiresIn: "1 day" });
+        //     // all is well, return token
+        //     return done(null, token);
+        // });
     }));
 
 };
