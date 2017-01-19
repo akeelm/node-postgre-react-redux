@@ -5,6 +5,7 @@ import security from './../../common/security';
 import random from './../../common/utils/random';
 import VerifyEmailTemplate from './../../common/email/verifyemailtemplate';
 import MailSender from './../../common/email/mailsender';
+const _ = require('underscore');
 
 module.exports = function(app, passport) {
 
@@ -137,12 +138,52 @@ module.exports = function(app, passport) {
       });
     });
 
+    //GET USER FROM TOKEN
     app.post('/api/user/getfromtoken', function(req, res){
       let token = req.body.token || req.query.token || req.headers['x-access-token'] || req.token;
       if (!token) return res.status(401).json({ message: 'No token' });
 
       let user = security.getUserFromToken(token);
       res.send({user: user, token: token });
+    });
+
+    //UPDATE USER
+    app.post('/api/user/update', security.isUserValid, function(req, res){
+      //Check user is valid for updating - either admin or same user
+      if (_.where(req.user.roles, {'name': 'admin'}).length > 0 ||
+          req.body.user.id === req.user.id){
+
+            //if e-mail is changed check it doesn't already exist
+            var emailChangedPromise = new Promise((resolve, reject) => {
+              if (req.body.user.email !== req.user.email) {
+                db.users.findOne({email: req.body.user.email}, (err, user) => {
+                  //the e-mail already exists
+                  if (user) reject('E-mail already in use');
+                  //no existing e-mail, continue
+                  resolve();
+                });
+              } else {
+                resolve();
+              }
+            });
+
+            //if password has been reset hash it
+            if (req.body.user.password)
+              req.body.user.password = bcrypt.hashSync(req.body.user.password, bcrypt.genSaltSync(8), null);
+
+            emailChangedPromise.then(() => {
+              //do the update
+              db.users.save(req.body.user, function(err,updated){
+                if (err) { res.status(401).send(err); return; }
+                security.refreshToken(updated.email).then((token) => {
+                  res.send({user: updated, token: token });
+                })
+              });
+            }).catch((reason) => {
+              res.statusMessage = 'A user with this e-mail already exists';
+              res.status(401).send(reason);
+            })
+      }
     });
 
   };

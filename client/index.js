@@ -15,6 +15,7 @@ import Register from './components/user/Register';
 import Login from './components/user/Login';
 import Logout from './components/user/Logout';
 import VerifyEmail from './components/user/VerifyEmail';
+import ProfileContainer from './components/user/ProfileContainer';
 
 const router = (
   <Provider store={store}>
@@ -25,6 +26,7 @@ const router = (
         <Route path="/login/" component={Login}></Route>
         <Route path="/logout/" component={Logout}></Route>
         <Route path="/user/verify/:code" component={VerifyEmail}></Route>
+        <Route path="/profile/" component={ProfileContainer}></Route>
       </Route>
     </Router>
   </Provider>

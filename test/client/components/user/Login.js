@@ -49,7 +49,6 @@ describe('LoginComponent', () => {
   it('should allow submission of the form', () => {
     subject.find('input[name="email"]').simulate('change', {target: {value: process.env.TEST_EMAIL}});
     subject.find('input[name="password"]').simulate('change', {target: {value: process.env.TEST_PASSWORD}});
-    debugger
     expect(inputField.text()).to.equal('Required');
   })
 })

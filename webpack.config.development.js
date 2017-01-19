@@ -32,9 +32,9 @@ module.exports = {
       test: /\.js$/,
       loader: 'babel-loader',
       exclude: /node_modules/,
-      //include: path.join(__dirname, 'client')
+      include: __dirname,//path.join(__dirname, 'client')
       query: {
-        presets: ['es2015', 'react']
+        presets: ['es2015', 'react', 'react-hmre']
       }
     },{
       test: /\.json$/,

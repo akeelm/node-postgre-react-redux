@@ -92,9 +92,32 @@ describe('user get roles method', () => {
 
 describe('get user from token method', () => {
   it('should get user from token', (done) => {
+    let token = localStorage.getItem('token');
     agent
     .post('/api/user/getfromtoken')
-    .send({ token: 'dfadfadkfmtest' })
+    .send({ token: token })
+    .end((err, res) => {
+      res.should.have.status(200);
+      done();
+    });
+  });
+});
+
+describe('update user method', () => {
+  it('should be able to update user', (done) => {
+    let token = localStorage.getItem('token');
+    agent
+    .post('/api/user/update')
+    .send({
+      token: token,
+      user: {
+        id: 1,
+        firstname: 'Akeel',
+        surname: 'Mughal',
+        email: 'akeelm_uk@hotmail.com',
+        password: 'password'
+      }
+    })
     .end((err, res) => {
       res.should.have.status(200);
       done();

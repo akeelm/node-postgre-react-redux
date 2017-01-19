@@ -45,7 +45,6 @@ module.exports = function(passport) {
 
             const user = result[0].users;
 
-            console.log(user);
             // if the user is found but the password is wrong
             if (!bcrypt.compareSync(password, user.password))
                 return done(null, false, { message: 'Wrong password.'});
@@ -60,32 +59,13 @@ module.exports = function(passport) {
             };
 
             let token = jwt.sign(payload, process.env.APP_SECRET, { expiresIn: "1 day" });
+
+            //save to localStorage for testing methods
+            try { localStorage.setItem('token', token); } catch(err) { }
+
             // all is well, return token
             return done(null, token);
         })
-        // db.users.findOne({ 'email' :  email }, function(err, user) {
-        //     // if there are any errors, return the error before anything else
-        //     if (err) return done(err);
-        //
-        //     // if no user is found, return the message
-        //     if (!user) return done(null, false, { message: 'No user found.' });
-        //
-        //     // if the user is found but the password is wrong
-        //     if (!bcrypt.compareSync(password, user.password))
-        //         return done(null, false, { message: 'Wrong password.'});
-        //
-        //     const payload = {
-        //       id: user.id,
-        //       email: user.email,
-        //       firstname: user.firstname,
-        //       surname: user.surname,
-        //       emailverified: user.emailverified
-        //     };
-        //
-        //     let token = jwt.sign(payload, process.env.APP_SECRET, { expiresIn: "1 day" });
-        //     // all is well, return token
-        //     return done(null, token);
-        // });
     }));
 
 };

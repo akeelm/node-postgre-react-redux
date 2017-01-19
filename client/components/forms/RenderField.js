@@ -1,8 +1,19 @@
 import React, {PropTypes} from 'react';
 
-const RenderField = ({ input, placeholder, type, className, meta: { touched, error, warning } }) => (
+const RenderField = ({
+  input,
+  placeholder,
+  type,
+  value,
+  test,
+  className,
+  meta: { touched, error, warning } }) => (
   <div className="has-error">
-    <input {...input} className={className} placeholder={placeholder} type={type} />
+    <input {...input}
+      className={className}
+      placeholder={placeholder}
+      type={type}
+    />
     {touched &&
       (
         (

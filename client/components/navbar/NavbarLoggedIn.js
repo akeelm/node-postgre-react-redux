@@ -5,7 +5,7 @@ export const NavbarLoginRegister = (props) => {
     return (
       <ul className="nav navbar-nav navbar-right">
         <li>
-          <Link to={"/login/"}>Profile</Link>
+          <Link to={"/profile/"}>Profile</Link>
         </li>
         <li>
           <Link to={"/logout/"}>Logout</Link>

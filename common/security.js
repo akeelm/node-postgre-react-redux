@@ -26,9 +26,9 @@ class security {
     });
   }
 
-  static isUserValid(req, res) {
+  static isUserValid(req, res, next) {
     return new Promise((resolve, reject) => {
-      let decoded = jwt.verify(req.token, process.env.APP_SECRET, (err, user) => {
+      let decoded = jwt.verify(req.body.token, process.env.APP_SECRET, (err, user) => {
         if (err) {
           return res.status(401).json({
             success: false,
@@ -37,8 +37,40 @@ class security {
         } else {
           req.user = user;
           resolve();
+          return next();
         }
       });
+    });
+  }
+
+  static refreshToken(email){
+    return new Promise((resolve, reject) => {
+      db.user.with_roles_json(email, function(err, result) {
+        // if there are any errors, return the error before anything else
+        if (err) return done(err);
+
+        // if no user is found, return the message
+        if (!result) return done(null, false, { message: 'No user found.' });
+
+        const user = result[0].users;
+
+        const payload = {
+          id: user.id,
+          email: user.email,
+          firstname: user.firstname,
+          surname: user.surname,
+          emailverified: user.emailverified,
+          roles: user.roles
+        };
+
+        let token = jwt.sign(payload, process.env.APP_SECRET, { expiresIn: "1 day" });
+
+        //save to localStorage for testing methods
+        try { localStorage.setItem('token', token); } catch(err) { }
+
+        // all is well, return token
+        resolve(token);
+      })
     });
   }
 

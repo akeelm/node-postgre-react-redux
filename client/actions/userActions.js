@@ -3,6 +3,8 @@ import * as authConstants from './../constants/auth';
 import * as apiUtils from './../utils/api_utils';
 import {reset} from 'redux-form';
 import { push } from 'react-router-redux';
+import User from './../../common/models/user';
+import * as modelUtils from './../../common/models/utils';
 
 //login
 export function loginUser(email, password) {
@@ -250,6 +252,9 @@ export function getFromTokenSuccess(token, user) {
     payload: {
       status: 200,
       token: token,
+      id: user.id,
+      firstname: user.firstname,
+      surname: user.surname,
       email: user.email,
       emailverified: user.emailverified,
       roles: user.roles
@@ -283,6 +288,81 @@ export function logoutUserSuccess() {
       email: null,
       token: null,
       emailverified: null
+    }
+  }
+
+}
+
+export function updateUser(token, user) {
+  //clean up the model for submission
+  let destinationUser = new User();
+  delete destinationUser.emailverified;
+  let userModel = modelUtils.cleanAndMapModel(user, destinationUser);
+
+  return (dispatch) => {
+    return fetch(`${process.env.SERVER_URL}/api/user/update/`, {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ user: userModel, token: token })
+    })
+    .then(apiUtils.checkHttpStatus)
+    .then(apiUtils.parseJSON)
+    .then((response) => {
+      try {
+        localStorage.setItem('token', response.token);
+        dispatch(updateUserSuccess(response));
+        setTimeout(() => {
+          //refresh user from token in localStorage
+          dispatch(getFromToken());
+        }, 2000);
+        dispatch(reset('profileForm'));
+        return updateUserSuccess(response);
+      }
+      catch (error) {
+        dispatch(
+          updateUserFailure({
+            response: {
+              status: 403,
+              statusText: error
+            }
+          })
+        );
+        return updateUserFailure({
+          response: {
+            status: 403,
+            statusText: error
+          }
+        })
+      }
+    })
+    .catch(error => {
+      dispatch(updateUserFailure(error));
+      return updateUserFailure(error);
+    })
+  }
+}
+
+export function updateUserSuccess(response) {
+  return {
+    type: authConstants.UPDATE_USER_SUCCESS,
+    payload: {
+      status: 200,
+      statusText: "User updated",
+      user: response.user,
+      token: response.token
+    }
+  }
+}
+
+export function updateUserFailure(error) {
+  return {
+    type: authConstants.UPDATE_USER_FAILURE,
+    payload: {
+      status: error.response.status,
+      statusText: error.response.statusText
     }
   }
 }
