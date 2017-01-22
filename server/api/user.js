@@ -10,7 +10,7 @@ const _ = require('underscore');
 module.exports = function(app, passport) {
 
     //USER REGISTER
-    app.post('/api/user/register', function(req, res) {
+    app.post('/api/user/register', (req, res) => {
       if (req.body.email === undefined){
         res.statusMessage = 'No data sent';
         res.status(401);
@@ -18,7 +18,7 @@ module.exports = function(app, passport) {
       }
 
       //check if email has already been registered
-      db.users.where("email=$1", [req.body.email], function(err,users){
+      db.users.where("email=$1", [req.body.email], (err,users) => {
         if (users.length > 0) {
           res.statusMessage = 'A user with this e-mail already exists';
           res.status(401);
@@ -35,17 +35,15 @@ module.exports = function(app, passport) {
           surname: req.body.surname,
           email: req.body.email,
           password: password
-        },
-        function(err,inserted) {
+        }, (err,inserted) => {
           if (err) { res.status(401).send(err); return; }
           else {
             //save email verification code
             db.emailverification.save({
                 userid: inserted.id,
                 code: random.randomString(16)
-            },
-            //send verification email
-            function(err, inserted) {
+            }, (err, inserted) => {
+              //send verification email
               if (err) throw err;
               MailSender.sendVerificationEmail(req.body.email, inserted.code)
               .then((result) => {
@@ -58,7 +56,7 @@ module.exports = function(app, passport) {
     });
 
     //VERIFY EMAIL CODE
-    app.all('/api/user/verifyemail/:code', function(req, res) {
+    app.all('/api/user/verifyemail/:code', (req, res) => {
         if (!req.params.code) {
           res.statusMessage = 'No data sent';
           res.status(401);
@@ -67,7 +65,7 @@ module.exports = function(app, passport) {
         }
 
         //check the verification code
-        db.emailverification.findOne({code: req.params.code}, function(err, code) {
+        db.emailverification.findOne({code: req.params.code}, (err, code) => {
           if (!code) {
             res.statusMessage = 'Invalid verification code';
             res.status(401);
@@ -76,7 +74,7 @@ module.exports = function(app, passport) {
           }
 
           //set user emailverified as true and delete validation entry
-          db.users.save({id: code.userid, emailverified: 'true'}, function(err){
+          db.users.save({id: code.userid, emailverified: 'true'}, (err) => {
             if (err) { res.status(401).send(err); return; }
             db.emailverification.destroy({id: code.id });
             res.send('Your account has now been verified');
@@ -85,7 +83,7 @@ module.exports = function(app, passport) {
     });
 
     //USER DELETE BY EMAIL
-    app.post('/api/user/delete', security.isAuthenticated, function(req, res) {
+    app.post('/api/user/delete', security.isAuthenticated, (req, res) => {
       if (req.body.email === undefined){
         res.statusMessage = 'No data sent';
         res.status(401);
@@ -93,9 +91,9 @@ module.exports = function(app, passport) {
       }
 
       //get user by email
-      db.users.where("email=$1", [req.body.email], function(err,users){
+      db.users.where("email=$1", [req.body.email], (err,users) => {
         if (users.length > 0) {
-          db.users.destroy({email: req.body.email}, function(err, user){
+          db.users.destroy({email: req.body.email}, (err, user) => {
             res.send('User deleted');
           });
         } else {
@@ -114,17 +112,17 @@ module.exports = function(app, passport) {
     }));
 
     //USER LOGIN SUCCESSS
-    app.all('/api/user/loggedin', function(req, res){
+    app.all('/api/user/loggedin', (req, res) => {
       res.send({token : `${req.user.token}`});
     });
 
     //USER UNAUTHORIZED
-    app.all ('/api/user/unauthorized', function(req, res){
+    app.all ('/api/user/unauthorized', (req, res) => {
       res.status(401).send('Unauthorized');
     });
 
     //USER ROLES
-    app.post('/api/user/roles', security.isAuthenticated, function(req, res) {
+    app.post('/api/user/roles', security.isAuthenticated, (req, res) => {
       if (req.body.userid === undefined) return res.status(401).send('No data sent');
 
       var onlyAdmins = security.onlyAdminsPromise(req, res);
@@ -139,7 +137,7 @@ module.exports = function(app, passport) {
     });
 
     //GET USER FROM TOKEN
-    app.post('/api/user/getfromtoken', function(req, res){
+    app.post('/api/user/getfromtoken', (req, res) => {
       let token = req.body.token || req.query.token || req.headers['x-access-token'] || req.token;
       if (!token) return res.status(401).json({ message: 'No token' });
 
@@ -148,7 +146,7 @@ module.exports = function(app, passport) {
     });
 
     //UPDATE USER
-    app.post('/api/user/update', security.isUserValid, function(req, res){
+    app.post('/api/user/update', security.isUserValid, (req, res) => {
       //Check user is valid for updating - either admin or same user
       if (_.where(req.user.roles, {'name': 'admin'}).length > 0 ||
           req.body.user.id === req.user.id){
@@ -173,7 +171,7 @@ module.exports = function(app, passport) {
 
             emailChangedPromise.then(() => {
               //do the update
-              db.users.save(req.body.user, function(err,updated){
+              db.users.save(req.body.user, (err,updated) => {
                 if (err) { res.status(401).send(err); return; }
                 security.refreshToken(updated.email).then((token) => {
                   res.send({user: updated, token: token });
@@ -184,6 +182,89 @@ module.exports = function(app, passport) {
               res.status(401).send(reason);
             })
       }
+    });
+
+
+    //USER FORGOT PASSWORD
+    app.post('/api/user/forgotpassword', (req, res) => {
+      if (req.body.email === undefined) { res.status(401).send('E-mail address required');}
+
+      //check if user exists
+      db.users.findOne({email: req.body.email}, (err, user) => {
+        if (err) { res.status(401).send(err); return; }
+        if (!user) { res.status(401).send('No user with that e-mail'); };
+
+        //check if row already exists
+        db.forgotpassword.findOne({userid: user.id}, (err, forgotobj) => {
+          if (err) { res.status(401).send(err); return; }
+          if(forgotobj) {
+            forgotobj.code = random.randomString(16);
+          } else {
+            forgotobj = {
+              userid: user.id,
+              code: random.randomString(16)
+            }
+          }
+          //save a forgot password code
+          db.forgotpassword.save(forgotobj, (err, inserted) => {
+            if (err) { res.status(401).send(err); return; }
+            //send password reset email
+            MailSender.sendPasswordResetEmail(req.body.email, inserted.code)
+            .then((result) => {
+              res.statusMessage = 'Instructions to reset the password have been sent to your e-mail address';
+              res.send();
+            });
+          });
+        })
+      });
+    });
+
+    //VALIDATE FORGOT PASSWORD CODE
+    app.post('/api/user/validateforgotpasswordcode', (req, res) => {
+      if (req.body.code === undefined) { res.status(401).send('No data sent'); }
+
+      //check the forgot password code
+      db.forgotpassword.findOne({code: req.body.code}, (err, result) => {
+        if (err) { res.status(401).send(err); return; }
+        //return the userid
+        if (result){
+          res.send({userid: result.userid});
+        } else {
+          res.statusMessage = 'Invalid code';
+          res.status(401).send();
+        }
+      });
+    });
+
+    //USER RESET PASSWORD
+    app.post('/api/user/resetpassword', (req, res) => {
+      if (req.body.code === undefined && req.body.password === undefined) {
+        res.status(401).send('No data sent');
+      }
+
+      //check the forgot password code
+      db.forgotpassword.findOne({code: req.body.code}, (err, result) => {
+        if (err) { res.status(401).send(err); return; }
+        if (result === undefined) {
+          res.statusMessage = "invalid code";
+          res.status(401).send();
+          return;
+        }
+
+        //encrypt the password
+        let password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(8), null);
+
+        //update the password
+        db.users.save({id: result.userid, password: password}, (err, user) => {
+          if (err) { res.status(401).send(err); return; }
+          //delete the code entry
+          db.forgotpassword.destroy({code: req.body.code}, (err, result) => {
+            if (err) { res.status(401).send(err); return; }
+            res.statusMessage = 'Password has been reset';
+            res.send();
+          })
+        })
+      })
     });
 
   };

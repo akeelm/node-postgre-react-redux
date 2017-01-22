@@ -8,9 +8,6 @@ import { connect } from 'react-redux'
 import { getFromToken } from './../../actions/userActions';
 
 class ResetPassword extends React.Component{
-  handleSubmit(values) {
-    return this.props.actions.userActions.updateUser(this.props.user.token, values);
-  }
   componentWillUnmount() {
     this.props.actions.userActions.resetUserStatus();
   }
@@ -19,8 +16,7 @@ class ResetPassword extends React.Component{
       fields: { password, confirmPassword },
       handleSubmit, submitting, valid, pristine, actions } = this.props;
     return (
-      <form ref="resetPasswordForm" className="form-horizontal"
-        onSubmit={this.props.handleSubmit(this.handleSubmit.bind(this))}>
+      <form ref="resetPasswordForm" className="form-horizontal" >
         <div className="section">
           <div className="container">
             <div className="row">
@@ -37,7 +33,7 @@ class ResetPassword extends React.Component{
 
                     <div className="form-group">
                       <div className="col-md-10 col-md-offset-2">
-                        <button className="btn btn-primary pull-left" type="submit" disabled={pristine || submitting || !valid}>Submit</button>
+                        <button className="btn btn-primary pull-left" onClick={handleSubmit} disabled={pristine || submitting || !valid}>Submit</button>
                         <LoadingSpinner {... {submitting: submitting } } />
                       </div>
                     </div>
@@ -64,10 +60,10 @@ ResetPassword = reduxForm({
 })(ResetPassword);
 
 ResetPassword = connect(
-  state => ({
-    initialValues: state.user //loaded from the action
+  (state, ownProps) => ({
+    initialValues: state.user, //loaded from the action
+    loading: ownProps.loadAction //action to retrieve initial values
   }),
-  { load: getFromToken } //action to retrieve initial values
 )(ResetPassword)
 
 export default ResetPassword;

@@ -55,7 +55,6 @@ export default createReducer(initialState, {
       'isAuthenticated': false,
       'token': null,
       'email': null,
-      'statusText': 'You have been successfully logged out.'
     });
   },
   [authConstants.REGISTER_USER_SUCCESS]: (state, payload) => {
@@ -128,6 +127,43 @@ export default createReducer(initialState, {
     return Object.assign({}, state, {
       'status': payload.status,
       'statusText': `Update user failure: ${payload.statusText}`
+    });
+  },
+  [authConstants.FORGOT_USER_PASSWORD_SUCCESS]: (state, payload) => {
+    return Object.assign({}, state, {
+      'status': payload.status,
+      'statusText': `${payload.statusText}`
+    });
+  },
+  [authConstants.FORGOT_USER_PASSWORD_FAILURE]: (state, payload) => {
+    return Object.assign({}, state, {
+      'status': payload.status,
+      'statusText': `Forgot password failure: ${payload.statusText}`
+    });
+  },
+  [authConstants.VALIDATE_FORGOT_PASSWORD_CODE_SUCCESS]: (state, payload) => {
+    return Object.assign({}, state, {
+      'status': payload.status,
+      'statusText': `${payload.statusText}`,
+      'id': payload.userid,
+    });
+  },
+  [authConstants.VALIDATE_FORGOT_PASSWORD_CODE_FAILURE]: (state, payload) => {
+    return Object.assign({}, state, {
+      'status': payload.status,
+      'statusText': `${payload.statusText}`
+    });
+  },
+  [authConstants.RESET_PASSWORD_SUCCESS]: (state, payload) => {
+    return Object.assign({}, state, {
+      'status': payload.status,
+      'statusText': `${payload.statusText}`,
+    });
+  },
+  [authConstants.RESET_PASSWORD_FAILURE]: (state, payload) => {
+    return Object.assign({}, state, {
+      'status': payload.status,
+      'statusText': `${payload.statusText}`
     });
   },
 });

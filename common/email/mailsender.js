@@ -1,5 +1,6 @@
 const nodemailer = require('nodemailer');
 import VerifyEmailTemplate from './verifyemailtemplate';
+import PasswordResetTemplate from './passwordresettemplate';
 require('dotenv').config();
 
 class MailSender {
@@ -32,6 +33,16 @@ class MailSender {
         verifyEmailTemplate.getSubject(),
         verifyEmailTemplate.getTextTemplate(),
         verifyEmailTemplate.getHtmlTemplate()
+      );
+  }
+
+  static sendPasswordResetEmail(to, resetCode) {
+      let passwordResetEmail = new PasswordResetTemplate(to, resetCode);
+      return this.sendMail(
+        passwordResetEmail.getToAddress(),
+        passwordResetEmail.getSubject(),
+        passwordResetEmail.getTextTemplate(),
+        passwordResetEmail.getHtmlTemplate()
       );
   }
 }

@@ -114,7 +114,7 @@ describe('update user method', () => {
         id: 1,
         firstname: 'Akeel',
         surname: 'Mughal',
-        email: 'akeelm_uk@hotmail.com',
+        email: process.env.TEST_EMAIL,
         password: 'password'
       }
     })
@@ -123,4 +123,18 @@ describe('update user method', () => {
       done();
     });
   });
+});
+
+describe('forgot password', () => {
+  it('should be able to request a password reset', (done) => {
+    chai.request(server)
+    .post('/api/user/forgotpassword')
+    .send({
+      email: process.env.TEST_EMAIL,
+    })
+    .end((err, res) => {
+      res.should.have.status(200);
+      done();
+    });
+  }).timeout(15000);
 });

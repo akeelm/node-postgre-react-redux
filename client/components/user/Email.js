@@ -1,45 +1,39 @@
 import React from 'react';
-import FormStatus from './../forms/FormStatus.js';
-import InputText from './../forms/InputText.js';
+import FormStatus from './../forms/FormStatus';
+import InputText from './../forms/InputText';
 import { Field, reduxForm } from 'redux-form';
-import * as validate from './../../constants/validate.js';
+import * as validate from './../../constants/validate';
 import LoadingSpinner from './../forms/LoadingSpinner';
-import { Link } from 'react-router';
 
-class Login extends React.Component{
+class Email extends React.Component{
   handleSubmit(values) {
-    return this.props.actions.userActions.loginUser(values.email, values.password);
+    return this.props.actions.userActions.forgotPassword(values.email);
   }
   componentWillUnmount() {
     this.props.actions.userActions.resetUserStatus();
   }
   render() {
-    const { handleSubmit, submitting, valid, pristine } = this.props;
+    const {
+      handleSubmit, submitting, valid, pristine } = this.props;
     return (
-      <form ref="loginForm" className="form-horizontal"
+      <form ref="emailSubmitForm" className="form-horizontal"
         onSubmit={this.props.handleSubmit(this.handleSubmit.bind(this))}>
         <div className="section">
           <div className="container">
             <div className="row">
               <div className="col-md-11">
                 <div className="bs-component">
-                  <legend>Login</legend>
+                  <legend>Forgot password</legend>
                   <fieldset>
 
                     <InputText placeholder="E-mail" name="email" validate={[validate.email, validate.required]}/>
-
-                    <InputText placeholder="Password" name="password" validate={validate.required} type="password"/>
-
                     <div className="form-group">
                       <div className="col-md-10 col-md-offset-2">
-                        <button className="btn btn-primary pull-left" type="submit" disabled={submitting || !valid || pristine}>Submit</button>
+                        <button className="btn btn-primary pull-left" type="submit" disabled={pristine || submitting || !valid}>Submit</button>
                         <LoadingSpinner {... {submitting: submitting } } />
                       </div>
                     </div>
 
-                    <div className="col-md-10 col-md-offset-2">
-                      <Link to={"/forgotpassword/"}>Forgot password</Link>
-                    </div>
                     <FormStatus {...this.props.user} />
 
                   </fieldset>
@@ -53,9 +47,8 @@ class Login extends React.Component{
   }
 };
 
-Login = reduxForm({
-  form: 'loginForm', // a unique name for this form
-})(Login);
+Email = reduxForm({
+  form: 'emailSubmitForm',
+})(Email);
 
-
-export default Login;
+export default Email;

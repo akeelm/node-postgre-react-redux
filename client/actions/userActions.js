@@ -290,7 +290,6 @@ export function logoutUserSuccess() {
       emailverified: null
     }
   }
-
 }
 
 export function updateUser(token, user) {
@@ -360,6 +359,196 @@ export function updateUserSuccess(response) {
 export function updateUserFailure(error) {
   return {
     type: authConstants.UPDATE_USER_FAILURE,
+    payload: {
+      status: error.response.status,
+      statusText: error.response.statusText
+    }
+  }
+}
+
+export function validateForgotPasswordCode(code) {
+  return function(dispatch) {
+    return fetch(`${process.env.SERVER_URL}/api/user/validateforgotpasswordcode/`, {
+      method: 'post',
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ code: code })
+    })
+    .then(apiUtils.checkHttpStatus)
+    .then(apiUtils.parseJSON)
+    .then(response => {
+      try {
+        dispatch(validateForgotPasswordCodeSuccess(response));
+        return validateForgotPasswordCodeSuccess(response);
+      } catch (error) {
+        dispatch(
+          validateForgotPasswordCodeFailure({
+            response: {
+              status: 403,
+              statusText: error
+            }
+          })
+        );
+        return validateForgotPasswordCodeFailure({
+          response: {
+            status: 403,
+            statusText: error
+          }
+        });
+      }
+    })
+    .catch(error => {
+      dispatch(validateForgotPasswordCodeFailure(error));
+      return validateForgotPasswordCodeFailure(error);
+    })
+
+  }
+}
+
+export function validateForgotPasswordCodeSuccess(response) {
+  return {
+    type: authConstants.VALIDATE_FORGOT_PASSWORD_CODE_SUCCESS ,
+    payload: {
+      status: 200,
+      statusText: "",
+      userid: response.userid,
+    }
+  }
+}
+
+export function validateForgotPasswordCodeFailure(error) {
+  return {
+    type: authConstants.VALIDATE_FORGOT_PASSWORD_CODE_FAILURE  ,
+    payload: {
+      status: error.response.status,
+      statusText: error.response.statusText
+    }
+  }
+}
+
+export function forgotPassword(email) {
+  return function(dispatch) {
+    return fetch(`${process.env.SERVER_URL}/api/user/forgotpassword/`, {
+      method: 'post',
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email: email })
+    })
+    .then(apiUtils.checkHttpStatus)
+    .then(response => {
+      try {
+        dispatch(forgotPasswordSuccess());
+        setTimeout(() => {
+          dispatch(push('/'));
+        }, 2000);
+        return forgotPasswordSuccess();
+      } catch (error) {
+        dispatch(
+          forgotPasswordFailure({
+            response: {
+              status: 403,
+              statusText: error
+            }
+          })
+        );
+        return forgotPasswordFailure({
+          response: {
+            status: 403,
+            statusText: error
+          }
+        });
+      }
+    })
+    .catch(error => {
+      dispatch(forgotPasswordFailure(error));
+      return forgotPasswordFailure(error);
+    })
+  }
+}
+
+export function forgotPasswordSuccess(response) {
+  return {
+    type: authConstants.FORGOT_USER_PASSWORD_SUCCESS ,
+    payload: {
+      status: 200,
+      statusText: "An e-mail has been sent with password reset instructions",
+    }
+  }
+}
+
+export function forgotPasswordFailure(error) {
+  return {
+    type: authConstants.FORGOT_USER_PASSWORD_FAILURE ,
+    payload: {
+      status: error.response.status,
+      statusText: error.response.statusText
+    }
+  }
+}
+
+export function resetPassword(code, values) {
+  return function(dispatch) {
+    return fetch(`${process.env.SERVER_URL}/api/user/resetpassword/`, {
+      method: 'post',
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ code: code, password: values.password })
+    })
+    .then(apiUtils.checkHttpStatus)
+    .then(response => {
+      try {
+        dispatch(resetPasswordSuccess());
+        setTimeout(() => {
+          dispatch(resetUserStatus());
+          dispatch(push('/login/'));
+        }, 2000);
+        return resetPasswordSuccess();
+      } catch (error) {
+        dispatch(
+          resetPasswordFailure({
+            response: {
+              status: 403,
+              statusText: error
+            }
+          })
+        );
+        return resetPasswordFailure({
+          response: {
+            status: 403,
+            statusText: error
+          }
+        });
+      }
+    })
+    .catch(error => {
+      dispatch(resetPasswordFailure(error));
+      return resetPasswordFailure(error);
+    })
+  }
+}
+
+export function resetPasswordSuccess(response) {
+  return {
+    type: authConstants.RESET_PASSWORD_SUCCESS,
+    payload: {
+      status: 200,
+      statusText: "Your password has been reset",
+    }
+  }
+}
+
+export function resetPasswordFailure(error) {
+  return {
+    type: authConstants.RESET_PASSWORD_FAILURE ,
     payload: {
       status: error.response.status,
       statusText: error.response.statusText
