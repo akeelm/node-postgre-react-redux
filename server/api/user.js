@@ -113,7 +113,12 @@ module.exports = function(app, passport) {
 
     //USER LOGIN SUCCESSS
     app.all('/api/user/loggedin', (req, res) => {
-      res.send({token : `${req.user.token}`});
+      try {
+        res.send({token : `${req.user.token}`});
+      } catch(e) {
+        //if we don't have the request, get token from localStorage
+        res.send({token: `${localStorage.getItem("token")}`});
+      }
     });
 
     //USER UNAUTHORIZED

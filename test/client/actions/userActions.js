@@ -12,40 +12,32 @@ require('dotenv').config()
 chai.use(chaiHttp);
 var agent = chai.request.agent(server);
 
-import { applyMiddleware, createStore, compose } from 'redux';
 import thunk from 'redux-thunk';
-const middleware = applyMiddleware(thunk);
 import rootReducer from "./../../../client/reducers/baseReducer";
-let createStoreWithMiddleware = compose(
-  middleware
-)
 
-export const store = createStoreWithMiddleware(createStore)(
-    rootReducer,
-);
-
-function configureStore(mocks) {
-  return createStoreWithMiddleware(createStore)(
-    rootReducer,
-  );
-}
+import configureMockStore from 'redux-mock-store';
+const middlewares = [ thunk ];
+const mockStore = configureMockStore(middlewares);
 
 describe('actions::userActions::loginUser', (done) => {
   it('should return LOGIN_USER_SUCCESS for a valid user', (done) => {
-    actions.loginUser(process.env.TEST_EMAIL, process.env.TEST_PASSWORD)(configureStore)
-    .then((result) => {
-      expect(result.type).to.equal(authConstants.LOGIN_USER_SUCCESS);
+    const store = mockStore({ users: [] });
+
+    store.dispatch(actions.loginUser(process.env.TEST_EMAIL, process.env.TEST_PASSWORD))
+    .then(() => {
+      expect(store.getActions()[0].type).to.equal(authConstants.LOGIN_USER_SUCCESS);
       done();
-    })
-    .catch((e) => {
-      expect(result.type).to.equal(authConstants.LOGIN_USER_FAILURE);
+    }).catch((err) => {
+      expect(err.type).to.equal(authConstants.LOGIN_USER_FAILURE);
     });
   })
 
   it('should return LOGIN_USER_FAILURE for an invalid user', (done) => {
-    actions.loginUser('invalid@hotmail.com', 'password')(configureStore)
-    .then((result) => {
-      expect(result.type).to.equal(authConstants.LOGIN_USER_FAILURE);
+    const store = mockStore({ users: [] });
+
+    store.dispatch(actions.loginUser('invalid@hotmail.com', 'password'))
+    .then(() => {
+      expect(store.getActions()[0].type).to.equal(authConstants.LOGIN_USER_FAILURE);
       done();
     })
     .catch((e) => {

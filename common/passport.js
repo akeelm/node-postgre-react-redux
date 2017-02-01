@@ -41,7 +41,7 @@ module.exports = function(passport) {
             if (err) return done(err);
 
             // if no user is found, return the message
-            if (!result) return done(null, false, { message: 'No user found.' });
+            if (!result[0]) return done(null, false, { message: 'No user found.' });
 
             const user = result[0].users;
 

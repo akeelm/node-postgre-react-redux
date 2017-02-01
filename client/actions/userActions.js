@@ -8,7 +8,7 @@ import * as modelUtils from './../../common/models/utils';
 
 //login
 export function loginUser(email, password) {
-  return function(dispatch) {
+  return (dispatch) => {
     return fetch(`${process.env.SERVER_URL}/api/user/login/`, {
       method: 'post',
       credentials: 'include',
@@ -21,33 +21,14 @@ export function loginUser(email, password) {
     .then(apiUtils.checkHttpStatus)
     .then(apiUtils.parseJSON)
     .then((response) => {
-      try {
         dispatch(loginUserSuccess(email, response.token));
         dispatch(reset('loginForm'));
         setTimeout(() => {
           dispatch(push('/'));
         }, 2000);
-        return loginUserSuccess(email, response.token);
-      } catch (error) {
-        dispatch(
-          loginUserFailure({
-            response: {
-              status: 403,
-              statusText: error
-            }
-          })
-        );
-        return loginUserFailure({
-          response: {
-            status: 403,
-            statusText: error
-          }
-        });
-      }
     })
     .catch(error => {
       dispatch(loginUserFailure(error));
-      return loginUserFailure(error);
     })
   }
 }
@@ -87,31 +68,11 @@ export function registerUser(firstname, surname, email, password) {
     })
     .then(apiUtils.checkHttpStatus)
     .then((response) => {
-      try {
         dispatch(registerUserSuccess(response));
         dispatch(reset('registerForm'));
-        return registerUserSuccess(response);
-      }
-      catch (error) {
-        dispatch(
-          registerUserFailure({
-            response: {
-              status: 403,
-              statusText: error
-            }
-          })
-        );
-        return registerUserFailure({
-          response: {
-            status: 403,
-            statusText: error
-          }
-        })
-      }
     })
     .catch(error => {
       dispatch(registerUserFailure(error));
-      return registerUserFailure(error);
     })
   }
 }
@@ -155,32 +116,13 @@ export function validateUserEmail(code) {
     })
     .then(apiUtils.checkHttpStatus)
     .then(response => {
-      try {
         dispatch(verifyEmailSuccess());
         setTimeout(() => {
           dispatch(push('/'));
         }, 2000);
-        return verifyEmailSuccess();
-      } catch (error) {
-        dispatch(
-          verifyEmailFailure({
-            response: {
-              status: 403,
-              statusText: error
-            }
-          })
-        );
-        return verifyEmailFailure({
-          response: {
-            status: 403,
-            statusText: error
-          }
-        });
-      }
     })
     .catch(error => {
       dispatch(verifyEmailFailure(error));
-      return verifyEmailFailure(error);
     })
   }
 }
@@ -219,29 +161,10 @@ export function getFromToken() {
     .then(apiUtils.checkHttpStatus)
     .then(apiUtils.parseJSON)
     .then(response => {
-      try {
         dispatch(getFromTokenSuccess(response.token, response.user));
-        return getFromTokenSuccess(response.token, response.user);
-      } catch (error) {
-        dispatch(
-          getFromTokenFailure({
-            response: {
-              status: 403,
-              statusText: error
-            }
-          })
-        );
-        return getFromTokenFailure({
-          response: {
-            status: 403,
-            statusText: error
-          }
-        });
-      }
     })
     .catch(error => {
       dispatch(getFromTokenFailure(error));
-      return getFromTokenFailure(error);
     })
   }
 }
@@ -276,7 +199,6 @@ export function logoutUser() {
     localStorage.setItem('token', null);
     dispatch(push('/'));
     dispatch(logoutUserSuccess());
-    return logoutUserSuccess();
   }
 }
 
@@ -310,7 +232,6 @@ export function updateUser(token, user) {
     .then(apiUtils.checkHttpStatus)
     .then(apiUtils.parseJSON)
     .then((response) => {
-      try {
         localStorage.setItem('token', response.token);
         dispatch(updateUserSuccess(response));
         setTimeout(() => {
@@ -318,28 +239,9 @@ export function updateUser(token, user) {
           dispatch(getFromToken());
         }, 2000);
         dispatch(reset('profileForm'));
-        return updateUserSuccess(response);
-      }
-      catch (error) {
-        dispatch(
-          updateUserFailure({
-            response: {
-              status: 403,
-              statusText: error
-            }
-          })
-        );
-        return updateUserFailure({
-          response: {
-            status: 403,
-            statusText: error
-          }
-        })
-      }
     })
     .catch(error => {
       dispatch(updateUserFailure(error));
-      return updateUserFailure(error);
     })
   }
 }
@@ -380,29 +282,10 @@ export function validateForgotPasswordCode(code) {
     .then(apiUtils.checkHttpStatus)
     .then(apiUtils.parseJSON)
     .then(response => {
-      try {
         dispatch(validateForgotPasswordCodeSuccess(response));
-        return validateForgotPasswordCodeSuccess(response);
-      } catch (error) {
-        dispatch(
-          validateForgotPasswordCodeFailure({
-            response: {
-              status: 403,
-              statusText: error
-            }
-          })
-        );
-        return validateForgotPasswordCodeFailure({
-          response: {
-            status: 403,
-            statusText: error
-          }
-        });
-      }
     })
     .catch(error => {
       dispatch(validateForgotPasswordCodeFailure(error));
-      return validateForgotPasswordCodeFailure(error);
     })
 
   }
@@ -442,32 +325,11 @@ export function forgotPassword(email) {
     })
     .then(apiUtils.checkHttpStatus)
     .then(response => {
-      try {
         dispatch(forgotPasswordSuccess());
-        setTimeout(() => {
-          dispatch(push('/'));
-        }, 2000);
-        return forgotPasswordSuccess();
-      } catch (error) {
-        dispatch(
-          forgotPasswordFailure({
-            response: {
-              status: 403,
-              statusText: error
-            }
-          })
-        );
-        return forgotPasswordFailure({
-          response: {
-            status: 403,
-            statusText: error
-          }
-        });
-      }
+        setTimeout(() => { dispatch(push('/')); }, 2000);
     })
     .catch(error => {
       dispatch(forgotPasswordFailure(error));
-      return forgotPasswordFailure(error);
     })
   }
 }
@@ -505,33 +367,13 @@ export function resetPassword(code, values) {
     })
     .then(apiUtils.checkHttpStatus)
     .then(response => {
-      try {
-        dispatch(resetPasswordSuccess());
         setTimeout(() => {
           dispatch(resetUserStatus());
           dispatch(push('/login/'));
         }, 2000);
-        return resetPasswordSuccess();
-      } catch (error) {
-        dispatch(
-          resetPasswordFailure({
-            response: {
-              status: 403,
-              statusText: error
-            }
-          })
-        );
-        return resetPasswordFailure({
-          response: {
-            status: 403,
-            statusText: error
-          }
-        });
-      }
     })
     .catch(error => {
       dispatch(resetPasswordFailure(error));
-      return resetPasswordFailure(error);
     })
   }
 }
