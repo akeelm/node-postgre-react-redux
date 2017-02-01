@@ -92,15 +92,10 @@ export default createReducer(initialState, {
       'isAuthenticating': false,
       'isAuthenticated': true,
       'token': payload.token,
-      'id': payload.id,
-      'firstname': payload.firstname,
-      'surname': payload.surname,
-      'email': payload.email,
-      'emailverified': payload.emailverified,
-      'roles': payload.roles,
       'status': payload.status,
       'statusText': payload.statusText,
-    });
+    },
+    payload.user);
   },
   [authConstants.VALIDATE_USER_FROM_TOKEN_FAILURE]: (state, payload) => {
     return Object.assign({}, state, {
@@ -116,12 +111,7 @@ export default createReducer(initialState, {
       'status': payload.status,
       'statusText': `${payload.statusText}`,
       'token': payload.token,
-      'id': payload.user.id,
-      'firstname': payload.user.firstname,
-      'surname': payload.user.surname,
-      'email': payload.user.email,
-      'emailverified': payload.user.emailverified,
-    });
+    }, payload.user);
   },
   [authConstants.UPDATE_USER_FAILURE]: (state, payload) => {
     return Object.assign({}, state, {

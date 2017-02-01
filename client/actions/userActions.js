@@ -175,12 +175,7 @@ export function getFromTokenSuccess(token, user) {
     payload: {
       status: 200,
       token: token,
-      id: user.id,
-      firstname: user.firstname,
-      surname: user.surname,
-      email: user.email,
-      emailverified: user.emailverified,
-      roles: user.roles
+      user: user
     }
   }
 }
