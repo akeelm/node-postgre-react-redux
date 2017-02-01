@@ -1,3 +1,5 @@
+import fetch from 'isomorphic-fetch';
+
 export function parseJSON(response) {
    return response.json();
 }
@@ -10,4 +12,16 @@ export function checkHttpStatus(response) {
         error.response = response
         throw error
     }
+}
+
+export function api_fetch(url, body = undefined, method = 'get') {
+  return fetch(url, {
+    method: method,
+    credentials: 'include',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: body
+  });
 }

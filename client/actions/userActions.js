@@ -9,15 +9,9 @@ import * as modelUtils from './../../common/models/utils';
 //login
 export function loginUser(email, password) {
   return (dispatch) => {
-    return fetch(`${process.env.SERVER_URL}/api/user/login/`, {
-      method: 'post',
-      credentials: 'include',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({email: email, password: password})
-    })
+    apiUtils.api_fetch(`${process.env.SERVER_URL}/api/user/login/`,
+      JSON.stringify({email: email, password: password}),
+      'post')
     .then(apiUtils.checkHttpStatus)
     .then(apiUtils.parseJSON)
     .then((response) => {
@@ -58,14 +52,11 @@ export function loginUserFailure(error) {
 //register
 export function registerUser(firstname, surname, email, password) {
   return (dispatch) => {
-    return fetch(`${process.env.SERVER_URL}/api/user/register/`, {
-      method: 'post',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({firstname: firstname, surname: surname, email: email, password: password})
-    })
+    apiUtils.api_fetch(
+      `${process.env.SERVER_URL}/api/user/register/`,
+      JSON.stringify({firstname: firstname, surname: surname, email: email, password: password}),
+      'post'
+    )
     .then(apiUtils.checkHttpStatus)
     .then((response) => {
         dispatch(registerUserSuccess(response));
@@ -106,14 +97,9 @@ export function resetUserStatus() {
 
 export function validateUserEmail(code) {
   return function(dispatch) {
-    return fetch(`${process.env.SERVER_URL}/api/user/verifyemail/${code}/`, {
-      method: 'get',
-      credentials: 'include',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-    })
+    apiUtils.api_fetch(
+      `${process.env.SERVER_URL}/api/user/verifyemail/${code}/`
+    )
     .then(apiUtils.checkHttpStatus)
     .then(response => {
         dispatch(verifyEmailSuccess());
@@ -149,15 +135,9 @@ export function verifyEmailFailure(error) {
 
 export function getFromToken() {
   return function(dispatch) {
-    return fetch(`${process.env.SERVER_URL}/api/user/getFromToken/`, {
-      method: 'post',
-      credentials: 'include',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({token: localStorage.getItem('token')})
-    })
+    apiUtils.api_fetch(`${process.env.SERVER_URL}/api/user/getFromToken/`,
+      JSON.stringify({token: localStorage.getItem('token')}),
+      'post')
     .then(apiUtils.checkHttpStatus)
     .then(apiUtils.parseJSON)
     .then(response => {
@@ -216,14 +196,11 @@ export function updateUser(token, user) {
   let userModel = modelUtils.cleanAndMapModel(user, destinationUser);
 
   return (dispatch) => {
-    return fetch(`${process.env.SERVER_URL}/api/user/update/`, {
-      method: 'post',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ user: userModel, token: token })
-    })
+    apiUtils.api_fetch(
+      `${process.env.SERVER_URL}/api/user/update/`,
+      JSON.stringify({ user: userModel, token: token }),
+      'post'
+    )
     .then(apiUtils.checkHttpStatus)
     .then(apiUtils.parseJSON)
     .then((response) => {
@@ -265,15 +242,11 @@ export function updateUserFailure(error) {
 
 export function validateForgotPasswordCode(code) {
   return function(dispatch) {
-    return fetch(`${process.env.SERVER_URL}/api/user/validateforgotpasswordcode/`, {
-      method: 'post',
-      credentials: 'include',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ code: code })
-    })
+    apiUtils.api_fetch(
+      `${process.env.SERVER_URL}/api/user/validateforgotpasswordcode/`,
+      JSON.stringify({ code: code }),
+      'post'
+    )
     .then(apiUtils.checkHttpStatus)
     .then(apiUtils.parseJSON)
     .then(response => {
@@ -309,15 +282,11 @@ export function validateForgotPasswordCodeFailure(error) {
 
 export function forgotPassword(email) {
   return function(dispatch) {
-    return fetch(`${process.env.SERVER_URL}/api/user/forgotpassword/`, {
-      method: 'post',
-      credentials: 'include',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ email: email })
-    })
+    apiUtils.api_fetch(
+      `${process.env.SERVER_URL}/api/user/forgotpassword/`,
+      JSON.stringify({ email: email }),
+      'post'
+    )
     .then(apiUtils.checkHttpStatus)
     .then(response => {
         dispatch(forgotPasswordSuccess());
@@ -351,15 +320,11 @@ export function forgotPasswordFailure(error) {
 
 export function resetPassword(code, values) {
   return function(dispatch) {
-    return fetch(`${process.env.SERVER_URL}/api/user/resetpassword/`, {
-      method: 'post',
-      credentials: 'include',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ code: code, password: values.password })
-    })
+    apiUtils.api_fetch(
+      `${process.env.SERVER_URL}/api/user/resetpassword/`,
+      JSON.stringify({ code: code, password: values.password }),
+      'post'
+    )
     .then(apiUtils.checkHttpStatus)
     .then(response => {
         setTimeout(() => {
