@@ -87,17 +87,16 @@ export default createReducer(initialState, {
       'statusText': `Verification failure: ${payload.statusText}`
     });
   },
-  [authConstants.VALIDATE_USER_FROM_TOKEN_SUCCESS]: (state, payload) => {
+  [authConstants.GET_USER_FROM_TOKEN_SUCCESS]: (state, payload) => {
     return Object.assign({}, state, {
       'isAuthenticating': false,
       'isAuthenticated': true,
       'token': payload.token,
       'status': payload.status,
       'statusText': payload.statusText,
-    },
-    payload.user);
+    }, payload.user);
   },
-  [authConstants.VALIDATE_USER_FROM_TOKEN_FAILURE]: (state, payload) => {
+  [authConstants.GET_USER_FROM_TOKEN_FAILURE]: (state, payload) => {
     return Object.assign({}, state, {
       'isAuthenticating': false,
       'isAuthenticated': false,

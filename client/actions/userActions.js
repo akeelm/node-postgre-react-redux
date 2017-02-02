@@ -106,6 +106,7 @@ export function validateUserEmail(code) {
         setTimeout(() => {
           dispatch(push('/'));
         }, 2000);
+        dispatch(reset('verifyEmailForm'));
     })
     .catch(error => {
       dispatch(verifyEmailFailure(error));
@@ -151,7 +152,7 @@ export function getFromToken() {
 
 export function getFromTokenSuccess(token, user) {
   return {
-    type: authConstants.VALIDATE_USER_FROM_TOKEN_SUCCESS,
+    type: authConstants.GET_USER_FROM_TOKEN_SUCCESS,
     payload: {
       status: 200,
       token: token,
@@ -162,7 +163,7 @@ export function getFromTokenSuccess(token, user) {
 
 export function getFromTokenFailure(error) {
   return {
-    type: authConstants.VALIDATE_USER_FROM_TOKEN_FAILURE,
+    type: authConstants.GET_USER_FROM_TOKEN_FAILURE,
     payload: {
       status: error.response.status,
     }
@@ -291,6 +292,7 @@ export function forgotPassword(email) {
     .then(response => {
         dispatch(forgotPasswordSuccess());
         setTimeout(() => { dispatch(push('/')); }, 2000);
+        dispatch(reset('emailSubmitForm'));
     })
     .catch(error => {
       dispatch(forgotPasswordFailure(error));
