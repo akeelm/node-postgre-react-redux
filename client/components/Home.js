@@ -13,7 +13,8 @@ const Home = React.createClass({
               on the front end.
             </p>
             <p>
-
+              Also using Redux-Form, Redux-Thunk, React-Router, Bootstrap,
+              and Mocha & Chai for testing.
             </p>
           </h4>
         </div>
