@@ -9,7 +9,7 @@ import * as modelUtils from './../../common/models/utils';
 //login
 export function loginUser(email, password) {
   return (dispatch) => {
-    apiUtils.api_fetch(`${process.env.SERVER_URL}/api/user/login/`,
+    return apiUtils.api_fetch(`${process.env.SERVER_URL}/api/user/login/`,
       JSON.stringify({email: email, password: password}),
       'post')
     .then(apiUtils.checkHttpStatus)
@@ -52,7 +52,7 @@ export function loginUserFailure(error) {
 //register
 export function registerUser(firstname, surname, email, password) {
   return (dispatch) => {
-    apiUtils.api_fetch(
+    return apiUtils.api_fetch(
       `${process.env.SERVER_URL}/api/user/register/`,
       JSON.stringify({firstname: firstname, surname: surname, email: email, password: password}),
       'post'
@@ -97,7 +97,7 @@ export function resetUserStatus() {
 
 export function validateUserEmail(code) {
   return function(dispatch) {
-    apiUtils.api_fetch(
+    return apiUtils.api_fetch(
       `${process.env.SERVER_URL}/api/user/verifyemail/${code}/`
     )
     .then(apiUtils.checkHttpStatus)
@@ -135,7 +135,7 @@ export function verifyEmailFailure(error) {
 
 export function getFromToken() {
   return function(dispatch) {
-    apiUtils.api_fetch(`${process.env.SERVER_URL}/api/user/getFromToken/`,
+    return apiUtils.api_fetch(`${process.env.SERVER_URL}/api/user/getFromToken/`,
       JSON.stringify({token: localStorage.getItem('token')}),
       'post')
     .then(apiUtils.checkHttpStatus)
@@ -196,7 +196,7 @@ export function updateUser(token, user) {
   let userModel = modelUtils.cleanAndMapModel(user, destinationUser);
 
   return (dispatch) => {
-    apiUtils.api_fetch(
+    return apiUtils.api_fetch(
       `${process.env.SERVER_URL}/api/user/update/`,
       JSON.stringify({ user: userModel, token: token }),
       'post'
@@ -242,7 +242,7 @@ export function updateUserFailure(error) {
 
 export function validateForgotPasswordCode(code) {
   return function(dispatch) {
-    apiUtils.api_fetch(
+    return apiUtils.api_fetch(
       `${process.env.SERVER_URL}/api/user/validateforgotpasswordcode/`,
       JSON.stringify({ code: code }),
       'post'
@@ -282,7 +282,7 @@ export function validateForgotPasswordCodeFailure(error) {
 
 export function forgotPassword(email) {
   return function(dispatch) {
-    apiUtils.api_fetch(
+    return apiUtils.api_fetch(
       `${process.env.SERVER_URL}/api/user/forgotpassword/`,
       JSON.stringify({ email: email }),
       'post'

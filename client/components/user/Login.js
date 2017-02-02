@@ -16,13 +16,13 @@ class Login extends React.Component{
   render() {
     const { handleSubmit, submitting, valid, pristine } = this.props;
     return (
+      <form ref="loginForm" className="form-horizontal" onSubmit={this.props.handleSubmit(this.handleSubmit.bind(this))}>
         <div className="section">
           <div className="container">
             <div className="row">
               <div className="col-md-11">
                 <div className="bs-component">
                   <legend>Login</legend>
-                  <form ref="loginForm" className="form-horizontal" onSubmit={this.props.handleSubmit(this.handleSubmit.bind(this))}>
                   <fieldset>
 
                     <InputText placeholder="E-mail" name="email" validate={[validate.email, validate.required]}/>
@@ -42,12 +42,12 @@ class Login extends React.Component{
                     <FormStatus {...this.props.user} />
 
                   </fieldset>
-                </form>
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </form>
     )
   }
 };
