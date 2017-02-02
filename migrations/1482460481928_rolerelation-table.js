@@ -4,8 +4,8 @@ exports.up = function(pgm) {
     (id SERIAL PRIMARY KEY,
       roleid INTEGER NOT NULL REFERENCES roles(id),
       userid INTEGER NOT NULL REFERENCES users(id),
-      createddate timestamp with time zone,
-      updateddate timestamp with time zone);`
+      createddate timestamp not null DEFAULT (now() AT TIME ZONE 'UTC'),
+      updateddate timestamp not null DEFAULT (now() AT TIME ZONE 'UTC'));`
   );
 
   pgm.sql(

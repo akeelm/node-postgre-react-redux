@@ -197,7 +197,7 @@ module.exports = function(app, passport) {
       //check if user exists
       db.users.findOne({email: req.body.email}, (err, user) => {
         if (err) { res.status(401).send(err); return; }
-        if (!user) { res.status(401).send('No user with that e-mail'); };
+        if (!user) { res.status(401).send('No user with that e-mail'); return; };
 
         //check if row already exists
         db.forgotpassword.findOne({userid: user.id}, (err, forgotobj) => {

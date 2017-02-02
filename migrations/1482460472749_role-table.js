@@ -2,9 +2,9 @@ exports.up = function(pgm) {
   pgm.sql(
   `CREATE TABLE roles
     (id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL,
-    createddate timestamp with time zone,
-    updateddate timestamp with time zone);`
+    name TEXT NOT NULL unique,
+    createddate timestamp not null DEFAULT (now() AT TIME ZONE 'UTC'),
+    updateddate timestamp not null DEFAULT (now() AT TIME ZONE 'UTC'));`
   );
 
   pgm.sql(
