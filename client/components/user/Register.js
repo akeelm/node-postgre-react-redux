@@ -17,14 +17,13 @@ class Register extends React.Component{
       fields: { password, confirmPassword },
       handleSubmit, submitting, valid, pristine } = this.props;
     return (
-      <form ref="registerForm" className="form-horizontal"
-        onSubmit={this.props.handleSubmit(this.handleSubmit.bind(this))}>
         <div className="section">
           <div className="container">
             <div className="row">
               <div className="col-md-11">
                 <div className="bs-component">
                   <legend>Register</legend>
+                  <form ref="registerForm" className="form-horizontal" onSubmit={this.props.handleSubmit(this.handleSubmit.bind(this))}>
                   <fieldset>
 
                     <InputText placeholder="First name" name="firstname" validate={validate.required}/>
@@ -47,12 +46,12 @@ class Register extends React.Component{
                     <FormStatus {...this.props.user} />
 
                   </fieldset>
+                </form>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </form>
     )
   }
 };

@@ -13,7 +13,7 @@ const Home = React.createClass({
               on the front end.
             </p>
             <p>
-              
+
             </p>
           </h4>
         </div>

@@ -8,9 +8,13 @@ class Navbar extends React.Component{
     super(props);
   }
   render() {
+    const navbarClass = (this.props.location.pathname === "/") ?
+    'navbar navbar-default navbar-fixed-top navbar-color-on-scroll navbar-transparent'
+    :
+    'navbar navbar-default navbar-fixed-top'
     return (
       <div>
-        <nav className="navbar navbar-default navbar-fixed-top navbar-color-on-scroll navbar-transparent" id="sectionsNav">
+        <nav className={navbarClass} id="sectionsNav">
           <div className="container">
             <div className="navbar-header">
               <button type="button" className="navbar-toggle" data-toggle="collapse" data-target="#navigation">
@@ -19,7 +23,7 @@ class Navbar extends React.Component{
                 <span className="icon-bar"></span>
                 <span className="icon-bar"></span>
               </button>
-              <a className="navbar-brand">node.js-PostgreSql-React</a>
+              <Link className="navbar-brand" to={"/"}>node.js-PostgreSql-React</Link>
             </div>
             <div className="collapse navbar-collapse" id="navigation">
             {

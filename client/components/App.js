@@ -9,8 +9,10 @@ function mapStateToProps(state) {
   }
 }
 
-const App = connect(mapStateToProps, dispatch => ({
-  actions: actionCreators(dispatch)
-}))(Main);
+function mapDispatchToProps(dispatch) {
+    return { actions: actionCreators(dispatch) };
+}
+
+const App = connect(mapStateToProps, mapDispatchToProps)(Main);
 
 export default App;
